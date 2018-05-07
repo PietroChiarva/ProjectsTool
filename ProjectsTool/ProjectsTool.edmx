@@ -157,8 +157,8 @@
           <Property Name="IDPerson" Type="Int32" Nullable="false" />
           <Property Name="IDProject" Type="Int32" Nullable="false" />
           <Property Name="Percentage" Type="Int32" Nullable="false" />
-          <Property Name="StartActiveDate" Type="DateTime" Nullable="false" />
-          <Property Name="EndActiveDate" Type="DateTime" Nullable="false" />
+          <Property Name="StartActiveDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndActiveDate" Type="DateTime" Nullable="false" Precision="0" />
           <NavigationProperty Name="Person" Relationship="Self.FK_ActiveProject_Person" FromRole="ActiveProject" ToRole="Person" />
           <NavigationProperty Name="Project" Relationship="Self.FK_ActiveProject_Project" FromRole="ActiveProject" ToRole="Project" />
         </EntityType>
@@ -194,8 +194,8 @@
           </Key>
           <Property Name="IDProject" Type="Int32" Nullable="false" />
           <Property Name="ProjectName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="StartDate" Type="DateTime" Nullable="false" />
-          <Property Name="EndDate" Type="DateTime" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="IsFinish" Type="Boolean" Nullable="false" />
           <Property Name="IDClient" Type="Int32" Nullable="false" />
           <Property Name="IDPerson" Type="Int32" Nullable="false" />
