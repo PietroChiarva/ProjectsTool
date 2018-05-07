@@ -14,6 +14,13 @@ namespace ProjectsTool.Controllers
             return View();
         }
 
+        public ActionResult Resources()
+        {
+
+            return View();
+        }
+
+     
 
     }
 }

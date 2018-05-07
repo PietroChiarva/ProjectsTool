@@ -17,18 +17,18 @@ namespace ProjectsTool.Models
 
         public ADALTokenCache(string signedInUserId)
         {
-            // Associa la cache all'utente corrente dell'app Web
+            // associate the cache to the current user of the web app
             userId = signedInUserId;
             this.AfterAccess = AfterAccessNotification;
             this.BeforeAccess = BeforeAccessNotification;
             this.BeforeWrite = BeforeWriteNotification;
-            // Cerca la voce nel database
+            // look up the entry in the database
             Cache = db.UserTokenCacheList.FirstOrDefault(c => c.webUserUniqueId == userId);
-            // Inserisce la voce in memoria
+            // place the entry in memory
             this.Deserialize((Cache == null) ? null : MachineKey.Unprotect(Cache.cacheBits,"ADALCache"));
         }
 
-        // Pulisce il database
+        // clean up the database
         public override void Clear()
         {
             base.Clear();
@@ -37,18 +37,18 @@ namespace ProjectsTool.Models
             db.SaveChanges();
         }
 
-        // Notifica generata prima che la libreria di autenticazione di Active Directory (ADAL) acceda alla cache.
-        // È possibile aggiornare la copia in memoria dal database, se la versione in memoria non è aggiornata
+        // Notification raised before ADAL accesses the cache.
+        // This is your chance to update the in-memory copy from the DB, if the in-memory version is stale
         void BeforeAccessNotification(TokenCacheNotificationArgs args)
         {
             if (Cache == null)
             {
-                // Primo accesso
+                // first time access
                 Cache = db.UserTokenCacheList.FirstOrDefault(c => c.webUserUniqueId == userId);
             }
             else
-            {
-                // Recupera l'ultima scrittura dal database
+            { 
+                // retrieve last write from the DB
                 var status = from e in db.UserTokenCacheList
                              where (e.webUserUniqueId == userId)
                 select new
@@ -56,21 +56,21 @@ namespace ProjectsTool.Models
                     LastWrite = e.LastWrite
                 };
 
-                // Se la copia in memoria è precedente alla copia persistente
+                // if the in-memory copy is older than the persistent copy
                 if (status.First().LastWrite > Cache.LastWrite)
                 {
-                    // Esegue la lettura dall'archivio, aggiorna la copia in memoria
+                    // read from from storage, update in-memory copy
                     Cache = db.UserTokenCacheList.FirstOrDefault(c => c.webUserUniqueId == userId);
                 }
             }
             this.Deserialize((Cache == null) ? null : MachineKey.Unprotect(Cache.cacheBits, "ADALCache"));
         }
 
-        // Notifica generata dopo che la libreria di autenticazione di Active Directory (ADAL) ha effettuato l'accesso alla cache.
-        // Se è impostato il flag HasStateChanged, la libreria di autenticazione di Active Directory (ADAL) ha modificato il contenuto della cache
+        // Notification raised after ADAL accessed the cache.
+        // If the HasStateChanged flag is set, ADAL changed the content of the cache
         void AfterAccessNotification(TokenCacheNotificationArgs args)
         {
-            // Se lo stato ha subito modifiche
+            // if state changed
             if (this.HasStateChanged)
             {
                 Cache = new UserTokenCache
@@ -79,7 +79,7 @@ namespace ProjectsTool.Models
                     cacheBits = MachineKey.Protect(this.Serialize(), "ADALCache"),
                     LastWrite = DateTime.Now
                 };
-                // Aggiorna il database e l'ultima scrittura
+                // update the DB and the lastwrite 
                 db.Entry(Cache).State = Cache.UserTokenCacheId == 0 ? EntityState.Added : EntityState.Modified;
                 db.SaveChanges();
                 this.HasStateChanged = false;
@@ -88,10 +88,10 @@ namespace ProjectsTool.Models
 
         void BeforeWriteNotification(TokenCacheNotificationArgs args)
         {
-            // Per assicurarsi che non si verifichino scritture simultanee, usare questa notifica per applicare un blocco all'immissione
+            // if you want to ensure that no concurrent write take place, use this notification to place a lock on the entry
         }
 
-    public override void DeleteItem(TokenCacheItem item)
+        public override void DeleteItem(TokenCacheItem item)
         {
             base.DeleteItem(item);
         }

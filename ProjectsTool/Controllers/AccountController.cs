@@ -13,7 +13,7 @@ namespace ProjectsTool.Controllers
     {
         public void SignIn()
         {
-            // Invia una richiesta di accesso OpenID Connect.
+            // Send an OpenID Connect sign-in request.
             if (!Request.IsAuthenticated)
             {
                 HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = "/" },
@@ -34,7 +34,7 @@ namespace ProjectsTool.Controllers
         {
             if (Request.IsAuthenticated)
             {
-                // Reindirizza alla home page se l'utente è autenticato.
+                // Redirect to home page if the user is authenticated.
                 return RedirectToAction("Index", "Home");
             }
 

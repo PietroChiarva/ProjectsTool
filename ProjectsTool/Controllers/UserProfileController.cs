@@ -36,7 +36,7 @@ namespace ProjectsTool.Controllers
                 ActiveDirectoryClient activeDirectoryClient = new ActiveDirectoryClient(serviceRoot,
                       async () => await GetTokenForApplication());
 
-                // Usa il token per eseguire una query sul grafico e ottenere i dettagli dell'utente
+                // use the token for querying the graph to get the user details
 
                 var result = await activeDirectoryClient.Users
                     .Where(u => u.ObjectId.Equals(userObjectID))
@@ -47,10 +47,10 @@ namespace ProjectsTool.Controllers
             }
             catch (AdalException)
             {
-                // Torna alla pagina dell'errore.
+                // Return to error page.
                 return View("Error");
             }
-            // Se l'operazione precedente non è riuscita, l'utente deve eseguire di nuovo l'autenticazione in modo esplicito per consentire all'app di ottenere il token necessario
+            // if the above failed, the user needs to explicitly re-authenticate for the app to obtain the required token
             catch (Exception)
             {
                 return View("Relogin");
@@ -70,9 +70,9 @@ namespace ProjectsTool.Controllers
             string tenantID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/tenantid").Value;
             string userObjectID = ClaimsPrincipal.Current.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier").Value;
 
-            // Ottiene un token per l'API Graph senza attivare alcuna interazione dell'utente (dalla cache, da un token di aggiornamento per più risorse e così via)
+            // get a token for the Graph without triggering any user interaction (from the cache, via multi-resource refresh token, etc)
             ClientCredential clientcred = new ClientCredential(clientId, appKey);
-            // Inizializza l'oggetto AuthenticationContext con la cache del token dell'utente che ha eseguito l'accesso, conservata nel database dell'app
+            // initialize AuthenticationContext with the token cache of the currently signed in user, as kept in the app's database
             AuthenticationContext authenticationContext = new AuthenticationContext(aadInstance + tenantID, new ADALTokenCache(signedInUserID));
             AuthenticationResult authenticationResult = await authenticationContext.AcquireTokenSilentAsync(graphResourceID, clientcred, new UserIdentifier(userObjectID, UserIdentifierType.UniqueId));
             return authenticationResult.AccessToken;
