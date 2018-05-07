@@ -1,8 +1,7 @@
 ﻿@model IEnumerable<ProjectsTool.Person>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+
+<h2>Resources</h2>
 <table class="table">
     <tr>
         <th>
@@ -23,7 +22,7 @@
         <th></th>
     </tr>
 
-@*@foreach (var item in Model) {*@
+@*foreach (var item in Model) {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Serial)
@@ -46,7 +45,7 @@
             <a class="btn btn-primary" onclick="ShowAssegnaModal ('@item.IDPerson')"><img src="~/Images/.png" /></a>
         </td>
     </tr>
-}
+}*@
 
 </table>
 
