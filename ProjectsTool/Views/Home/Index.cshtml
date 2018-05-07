@@ -1,10 +1,22 @@
-﻿@model IEnumerable<ProjectsTool.Project>
-
+﻿@model ProjectsTool.Models.ProjectModel
 @{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
+    tr {
+        display: none;
+    }
+
+        tr.header, tr.header1 {
+            display: table-row;
+            
+        }
+        tr.header {
+            cursor: pointer;
+        }
+
     .button {
         display: inline-block;
         border-radius: 4px;
@@ -49,56 +61,86 @@
 
 <div class="row">
     <div class="col-sm-8">
-        <table class="table">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.ProjectName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.StartDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EndDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsFinish)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Client.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Person.Serial)
-                </th>
-                <th></th>
-            </tr>
+        <table class="table" id="itdev_gangs">
 
-            @*@foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ProjectName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.StartDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EndDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.IsFinish)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Client.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Person.Serial)
-                        </td>
-                        <td></td>
-                    </tr>
-                }*@
+            @foreach (var item in Model.Projects)
+    {
+        if (Model.Projects.IndexOf(item) == 0)
+        {
+            <tr class="header1">
+
+                <th>
+                    @Html.DisplayNameFor(model => item.ProjectName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => item.StartDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => item.EndDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => item.IsFinish)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => item.ClientName)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => item.ManagerName)
+                </th>
+            </tr>
+}
+        @*/////*@
+        <tr class="header">
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsFinish)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClientName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ManagerName)
+            </td>
+        </tr>
+        <tr>
+  @foreach (var i in Model.Resources)
+    {
+      
+        if (Model.Resources.IndexOf(i) == 0)
+        {
+         
+            <th>
+                @Html.DisplayNameFor(model => i.Serial)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => i.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => i.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => i.EMail)
+            </th>
+        }
+}
+        </tr>
+}
 
         </table>
+
     </div>
+
+
     <div class="col-sm-4">
         <div class="card" id="Resource">
             <div class="card-body text-center">
@@ -108,4 +150,14 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('tr.header').click(function () {
+        $(this).nextUntil('tr.header').css('display', function (i, v) {
+            return this.style.display === 'table-row' ? 'none' : 'table-row';
+        });
+    });
+
+</script>
+
 
