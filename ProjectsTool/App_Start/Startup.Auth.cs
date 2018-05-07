@@ -25,7 +25,7 @@ namespace ProjectsTool
 
         public static readonly string Authority = aadInstance + tenantId;
 
-        // This is the resource ID of the AAD Graph API.  We'll need this to request a token to call the Graph API.
+        // Questo è l'ID risorsa dell'API Graph di Azure AD. Tale ID è necessario per richiedere un token per la chiamata all'API Graph.
         string graphResourceId = "https://graph.windows.net/";
 
         public void ConfigureAuth(IAppBuilder app)
@@ -45,7 +45,7 @@ namespace ProjectsTool
 
                     Notifications = new OpenIdConnectAuthenticationNotifications()
                     {
-                        // If there is a code in the OpenID Connect response, redeem it for an access token and refresh token, and store those away.
+                        // Se nella risposta di OpenID Connect è presente un codice, riscattarlo per un token di accesso e un token di aggiornamento, quindi archiviare i token.
                         AuthorizationCodeReceived = (context) =>
                         {
                             var code = context.Code;
