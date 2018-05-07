@@ -6,14 +6,12 @@ using System.Web.Mvc;
 
 namespace ProjectsTool.Controllers
 {
-    [Authorize]
-    public class HomeController : Controller
+    public class HomePageController : Controller
     {
+        // GET: HomePage
         public ActionResult Index()
         {
             return View();
         }
-
-
     }
 }

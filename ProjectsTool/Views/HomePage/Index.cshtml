@@ -1,0 +1,111 @@
+﻿@model IEnumerable<ProjectsTool.Project>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .button {
+        display: inline-block;
+        border-radius: 4px;
+        background-color: DodgerBlue;
+        border: none;
+        color: #FFFFFF;
+        text-align: center;
+        font-size: 28px;
+        padding: 20px;
+        width: 200px;
+        transition: all 0.5s;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+        .button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+
+            .button span:after {
+                content: '\00bb';
+                position: absolute;
+                opacity: 0;
+                top: 0;
+                right: -20px;
+                transition: 0.5s;
+            }
+
+        .button:hover span {
+            padding-right: 25px;
+        }
+
+            .button:hover span:after {
+                opacity: 1;
+                right: 0;
+            }
+</style>
+<h2>Home Page</h2>
+
+<div class="row">
+    <div class="col-sm-8">
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProjectName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StartDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EndDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsFinish)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Client.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Person.Serial)
+                </th>
+                <th></th>
+            </tr>
+
+            @*@foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProjectName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsFinish)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Person.Serial)
+                    </td>
+                    <td></td>
+                </tr>
+            }*@
+
+        </table>
+    </div>
+    <div class="col-sm-4">
+        <div class="card" id="Resource">
+            <div class="card-body text-center">
+                <h5 class="card-title"></h5>
+                <a href="@Url.Action("InsertNewUsers","Amministrator")" class="button">Resources</a>
+            </div>
+        </div>
+    </div>
+</div>
+
