@@ -57,6 +57,8 @@
                 right: 0;
             }
 </style>
+
+<body>
 <h2>Home Page</h2>
 
 <div class="row">
@@ -64,93 +66,110 @@
         <table class="table">
 
             @foreach (var item in Model.Projects)
-    {
-        if (Model.Projects.IndexOf(item) == 0)
-        {
-            <tr class="header1">
+            {
+                if (Model.Projects.IndexOf(item) == 0)
+                {
+                    <tr class="header1">
 
-                <th>
-                    @Html.DisplayNameFor(model => item.ProjectName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.StartDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.EndDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.IsFinish)
-                </th>
+                        <th>
+                            @Html.DisplayNameFor(model => item.ProjectName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => item.StartDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => item.EndDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => item.IsFinish)
+                        </th>
 
-                <th>
-                    @Html.DisplayNameFor(model => item.ClientName)
-                </th>
+                        <th>
+                            @Html.DisplayNameFor(model => item.ClientName)
+                        </th>
 
-                <th>
-                    @Html.DisplayNameFor(model => item.ManagerName)
-                </th>
-            </tr>
-}
-        @*/////*@
-        <tr class="header" onclick="GetResources('@item.IDProject')">
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsFinish)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClientName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ManagerName)
-            </td>
-        </tr>
+                        <th>
+                            @Html.DisplayNameFor(model => item.ManagerName)
+                        </th>
+                    </tr>
+                }
+                @*/////*@
+                <tr class="header" onclick="GetResources('@item.IDProject')">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProjectName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsFinish)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClientName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ManagerName)
+                    </td>
+                </tr>
             }
             @{ProjectsTool.Models.ProjectResource projectModel = new ProjectsTool.Models.ProjectResource();
 
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => projectModel.Serial)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => projectModel.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => projectModel.Surname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => projectModel.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => projectModel.Percentage)
-            </th>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => projectModel.Serial)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => projectModel.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => projectModel.Surname)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => projectModel.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => projectModel.Percentage)
+                    </th>
 
 
-        </tr>
+                </tr>
             }
         </table>
-       
+
 
     </div>
+
 
 
     <div class="col-sm-4">
         <div class="card" id="Resource">
             <div class="card-body text-center">
                 <h5 class="card-title"></h5>
-                <a href="@Url.Action("InsertNewUsers","Amministrator")" class="button">Resources</a>
+                <a href="@Url.Action("Resources","Home")" class="button">Resources</a>
             </div>
         </div>
+
+
+        <div class="card" id="AddProject">
+            <div class="card-body text-center">
+                <h5 class="card-title"></h5>
+                <a class="button" href="@Url.Action("AddProject","Home")" @*onclick="ShowProjectModal()"*@>ADD NEW PROJECT</a>
+            </div>
+        </div>
+
+        <div class="card" id="ClientSection">
+            <div class="card-body text-center">
+                <h5 class="card-title"></h5>
+                <a href="@Url.Action("ClientSection","Home")" class="button">Client Section</a>
+            </div>
+        </div>
+
     </div>
 </div>
-
+</body>
 <script type="text/javascript">
     var flag = false;
     function GetResources(IDProject)
@@ -190,6 +209,77 @@
             return this.style.display === 'table-row' ? 'none' : 'table-row';
         });
     });
+
+    //function ShowProjectModal(IDPerson) {
+
+    //    //window.open(Router.action('Resources', 'Details', { IDPerson: IDPerson }));
+    //    //$('#showModal .modal-body').load(Router.action('Employee', 'Index', { UserID: UserID }));
+    //    //$('#showModal').modal("show");
+
+
+    //}
+
+    function ShowProjectModal() {
+
+        $('#showModal .modal-body').load(Router.action('Home', 'AddProject'));
+        $('#showModal').modal("show");
+
+
+    }
+
+    //function ShowViewModal(UserID) {
+
+    //    $('#showModal .modal-body').load(Router.action('Manager', 'ViewTask', { UserID: UserID }));
+    //    $('#showModal').modal("show");
+
+    //}
+
+    //function ShowAssegnaModal(UserID) {
+
+    //    $('#showModal .modal-body').load(Router.action('Manager', 'AssegnaTask', { UserID: UserID }));
+    //    $('#showModal').modal("show");
+
+    //}
+
+
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () { scrollFunction() };
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            document.getElementById("myBtn").style.display = "block";
+        } else {
+            document.getElementById("myBtn").style.display = "none";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+
+
+    function myFunction() {
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+
 
 
 </script>
