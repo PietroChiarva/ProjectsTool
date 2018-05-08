@@ -213,6 +213,7 @@
     <Compile Include="Models\AdalTokenCache.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\ProjectModel.cs" />
+    <Compile Include="Models\ProjectResource.cs" />
     <Compile Include="Models\SingleProjectModel.cs" />
     <Compile Include="Person.cs">
       <DependentUpon>ProjectsTool.tt</DependentUpon>

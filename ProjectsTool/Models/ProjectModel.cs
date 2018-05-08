@@ -8,6 +8,7 @@ namespace ProjectsTool.Models
     public class ProjectModel : ProjectToolsEntities
     {
        public List<SingleProjectModel> Projects { get; set; }
+       public List<ProjectResource> ProjectResources { get; set; }
        public List<Person> Resources { get; set; }
        public List<Project> projects { get; set; }
 

@@ -16,5 +16,6 @@ namespace ProjectsTool.Models
         public bool IsFinish { get; set; }
         public string ClientName { get; set; }
         public string ManagerName { get; set; }
+        public int IDProject { get; set; }
     }
 }
