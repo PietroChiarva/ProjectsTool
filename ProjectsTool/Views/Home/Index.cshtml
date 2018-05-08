@@ -61,7 +61,7 @@
 
 <div class="row">
     <div class="col-sm-8">
-        <table class="table" id="itdev_gangs">
+        <table class="table">
 
             @foreach (var item in Model.Projects)
     {
@@ -135,10 +135,8 @@
 
         </tr>
             }
-            <tr id="ResourceInformation"></tr>
-
-
         </table>
+       
 
     </div>
 
@@ -154,25 +152,38 @@
 </div>
 
 <script type="text/javascript">
+    var flag = false;
     function GetResources(IDProject)
     {
-        $.ajax({
-            type: "GET",
-            //Dove devo inviare i dati recuperati dal form?
-            url: "@Url.Action("GetResources", "Home")",
-            //Quali dati devo inviare? e che tipo
-            data: "{IDProject=" + IDProject +"}",
+        if (flag == false) {
+            $parameters = {};
+            $parameters.IDProject = IDProject;
+            $.ajax({
+                type: "GET",
+                //Dove devo inviare i dati recuperati dal form?
+                url: "@Url.Action("GetResources", "Home")",
+                //Quali dati devo inviare? e che tipo
+                data: $parameters,
                 success: function (data) {
-                    for (var i = 0; i < data.projectModel; i++) {
-                        console.log(data.projectModel);
+                    var tr = '';
+                    for (var i = 0; i < data.ProjectResources.length; i++) {
+                        tr += "<tr>"+ "<td>" + data.ProjectResources[i].Serial + "</td>",
+                            "<td>" + data.ProjectResources[i].Name + "</td>", "<td>" + data.ProjectResources[i].Surname + "</td>",
+                            "<td>" + data.ProjectResources[i].Email + "</td>", "<td>" + data.ProjectResources[i].Percentage + "</td>"
+                            + "</tr>";
+                        flag = true;
                     }
-                   
+
                 },
                 error: function () {
                     alert("Chiamata fallita, riprova");
                     //sempre meglio impostare una callback in caso di fallimento
                 }
-        });
+            });
+        }
+        else {
+            flag = false;
+        }
     }
     $('tr.header').click(function () {
         $(this).nextUntil('tr.header').css('display', function (i, v) {

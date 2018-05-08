@@ -102,7 +102,7 @@ namespace ProjectsTool.Controllers
                     resources.Add(projectResources[0]);
                 }
                 projectModel.ProjectResources = resources;
-                return Json(new { projectModel });
+                return Json(new { projectModel.ProjectResources } , JsonRequestBehavior.AllowGet);
             }
         }
 
