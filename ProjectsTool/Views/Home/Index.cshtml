@@ -113,6 +113,12 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.ManagerName)
                     </td>
+                    <td>
+                        <a class="btn btn-primary" onclick="ShowResourceModal ('@item.IDProject')">Add resources</a>
+                        <a class="btn btn-primary" onclick="ShowModifyModal ('@item.IDProject')">Modify</a>
+                        <a class="btn btn-primary" onclick="ShowConcludeModal ('@item.IDProject')">Conclude</a>
+                        <a class="btn btn-primary" onclick="ShowDeleteModal ('@item.IDProject')">Delete</a>
+                    </td>
                 </tr>
             }
             @{ProjectsTool.Models.ProjectResource projectModel = new ProjectsTool.Models.ProjectResource();
@@ -148,7 +154,7 @@
         <div class="card" id="Resource">
             <div class="card-body text-center">
                 <h5 class="card-title"></h5>
-                <a href="@Url.Action("Resources","Home")" class="button">Resources</a>
+                <a href="@Url.Action("Resources","Resources")" class="button">Resources</a>
             </div>
         </div>
 
@@ -171,6 +177,25 @@
 </div>
 </body>
 <script type="text/javascript">
+
+    function ShowResourceModal(IDProject) {
+
+        $('#showModal .modal-body').load(Router.action('Home', 'SeeResource', { IDProject: IDProject }));
+        $('#showModal').modal("show");
+
+
+    }
+    function ShowModifyModal(IDProject) {
+
+        $('#showModal .modal-body').load(Router.action('Home', 'ModifyForm', { IDProject: IDProject }));
+        $('#showModal').modal("show");
+
+
+    }
+
+
+
+
     var flag = false;
     function GetResources(IDProject)
     {

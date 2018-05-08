@@ -59,24 +59,18 @@
             width: 100%;
         }*/
 </style>
-
-
+@using (Html.BeginForm("DoModifyProject", "Home", null, FormMethod.Post))
+{
     <div class="form-horizontal">
-        <h2>Add New Project</h2>
+        <h4>Project</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @*<div class="form-group">
-                @Html.LabelFor(model => model.IDProject, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.IDProject, new { htmlAttributes = new {  @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.IDProject, "", new { @class = "text-danger" })
-                </div>
-            </div>*@
+        @Html.HiddenFor(model => model.IDProject)
 
         <div class="form-group">
             @Html.LabelFor(model => model.ProjectName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { type = "text", @class = "form-control" } })
+                @Html.EditorFor(model => model.ProjectName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ProjectName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -97,7 +91,7 @@
             </div>
         </div>
 
-       
+
 
         <div class="form-group">
             @Html.LabelFor(model => model.IDClient, "IDClient", htmlAttributes: new { @class = "control-label col-md-2" })
@@ -107,59 +101,15 @@
             </div>
         </div>
 
-        @*<div class="form-group">
-            @Html.LabelFor(model => model.IDPerson, "IDPerson", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("IDPerson", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.IDPerson, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <a class="btn btn-default" onclick="InsertProject()">Insert</a>
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
+}   
 
 
-    <div>
-        @Html.ActionLink("Back to List", "Index")
-    </div>
 
-    <script type="text/javascript">
-
-        function InsertProject() {
-
-            //creo l'oggetto associando le variabili
-            var DatiProject = {
-                //IDProject: $('#IDProject').val(),
-                ProjectName: $('#ProjectName').val(),
-                StartDate: $('#StartDate').val(),
-                EndDate: $('#EndDate').val(),
-                IDClient: $('#IDClient').val(),
-            };
-
-            //chiamata ajax
-            $.ajax({
-                //imposto il tipo di invio dati (GET O POST)
-                type: "POST",
-                //Dove devo inviare i dati recuperati dal form?
-                url: "@Url.Action("_JSONAddProject", "Home")",
-                //Quali dati devo inviare? e che tipo
-                data: DatiProject,
-                success: function (data) {
-                    alert(data.messaggio);
-                    if (data.flag == true) {
-                        alert(data.messaggio);
-                    }
-                },
-                error: function () {
-                    alert("Chiamata fallita, riprova");
-                    //sempre meglio impostare una callback in caso di fallimento
-                }
-
-            });
-        };
-
-    </script>

@@ -106,14 +106,34 @@ namespace ProjectsTool.Controllers
             }
         }
 
-        public ActionResult Resources()
+        public ActionResult ModifyForm(int IDProject)
         {
-            using (ProjectToolsEntities db = new ProjectToolsEntities()) {
-                List<Person> resources = new List<Person>();
-                resources = db.Person.Where(x => x.IDRole == 0).ToList();
+            Project project = null;
+            List<Client> clientlist = new List<Client>();
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
+                ViewBag.RoleList = db.Client.Select(r => new SelectListItem() { Value = r.IDClient.ToString(), Text = r.Name }).ToList();
 
-                return View(resources);
+
+
             }
+            return PartialView(project);
+        }
+        
+        public ActionResult DoModifyProject(Project data)
+        {
+            Project project = null;
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                project = db.Project.Where(l => l.IDProject == data.IDProject).FirstOrDefault();
+                project.ProjectName = data.ProjectName;
+                project.StartDate = data.StartDate;
+                project.EndDate = data.EndDate;
+                project.Client = data.Client;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
         }
 
         public ActionResult AddProject()
@@ -156,6 +176,7 @@ namespace ProjectsTool.Controllers
             {
                 return Json(new { messaggio = $"Dati mancanti o non validi", flag = false });
             }
-        }   
+        }
+        
     }
 }
