@@ -214,6 +214,7 @@
       <DependentUpon>ProjectsTool.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ClientSectionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomePageController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
@@ -222,7 +223,9 @@
     </Compile>
     <Compile Include="Models\AdalTokenCache.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="Models\ClientList.cs" />
     <Compile Include="Models\ProjectModel.cs" />
+    <Compile Include="Models\ProjectResource.cs" />
     <Compile Include="Models\ResourceList.cs" />
     <Compile Include="Models\SingleProjectModel.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
@@ -484,6 +487,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\HomePage\Index.cshtml" />
     <Content Include="Views\Home\AddProject.cshtml" />
+    <Content Include="Views\ClientSection\ClientSection.cshtml" />
+    <Content Include="Views\ClientSection\AddNewClient.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
