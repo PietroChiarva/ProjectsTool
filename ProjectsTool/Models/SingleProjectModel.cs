@@ -10,7 +10,7 @@ namespace ProjectsTool.Models
     {
         public string ProjectName { get; set; }
         [DisplayFormat(DataFormatString = "{0:d}")]
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
         [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime? EndDate { get; set; }
         public bool IsFinish { get; set; }

@@ -1,21 +1,9 @@
 ﻿using ProjectsTool.Models;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
-using System.Web.Mvc.Filters;
-using System.Data.Entity;
-using System.Threading.Tasks;
-using System.Security.Claims;
-using Microsoft.Azure.ActiveDirectory.GraphClient;
-using System.Data.Services.Client;
-using System.IO;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using ProjectsTool.Controllers;
-using Microsoft.Ajax.Utilities;
-using System.Web.Routing;
+using System.Web;
 
 namespace ProjectsTool.Controllers
 {
@@ -24,6 +12,9 @@ namespace ProjectsTool.Controllers
     {
         public ActionResult Index()
         {
+            //int IDPerson = 0;
+            //int IDRole = 1;
+            string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
             ProjectModel projectModel = new ProjectModel();
             List<SingleProjectModel> Projects = new List<SingleProjectModel>();
             List<Person> resources = new List<Person>();
@@ -35,6 +26,15 @@ namespace ProjectsTool.Controllers
 
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
+                //var d = db.Person.Where(l => l.EMail == EMail).FirstOrDefault();
+                //if (d != null)
+                //{
+                //    Session["IDPerson"] = d.IDPerson;
+                //    IDRole = d.IDRole;
+                //    IDPerson = d.IDPerson;
+                //}
+
+
                 activeProjects = db.ActiveProject.ToList();
                 
                 foreach (ActiveProject a in activeProjects)
@@ -91,10 +91,21 @@ namespace ProjectsTool.Controllers
 
         public ActionResult _JSONAddProject(Project data)
         {
+
+            int IDPerson = 0;
+            string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
             if (!string.IsNullOrEmpty(data.ProjectName) &&  data.StartDate.HasValue && data.EndDate.HasValue /*&& data.Client.IDClient != 0*/)
             {
                 using (ProjectToolsEntities db = new ProjectToolsEntities())
                 {
+                  var d = db.Person.Where(l => l.EMail == EMail).FirstOrDefault();
+                  var r = db.Person.Where(l => l.IDRole == 1).FirstOrDefault();
+                    if (data != null)
+                    {
+                        data.IDPerson = d.IDPerson;
+                    }
+
+                    //data.IDPerson = 2;
                     db.Project.Add(data);
 
                     db.SaveChanges();
