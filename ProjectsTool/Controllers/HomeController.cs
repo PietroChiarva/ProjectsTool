@@ -17,12 +17,13 @@ namespace ProjectsTool.Controllers
             string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
             ProjectModel projectModel = new ProjectModel();
             List<SingleProjectModel> Projects = new List<SingleProjectModel>();
-            List<Person> resources = new List<Person>();
+            List<ProjectResource> resources = new List<ProjectResource>();
             Person ManagerName = null;
             Client ClientName = null;
             List<ActiveProject> activeProjects = new List<ActiveProject>();
             Project projects = null;
             List<SingleProjectModel> Proj = new List<SingleProjectModel>();
+            List<ProjectResource> projectResources = new List<ProjectResource>();
 
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
@@ -49,21 +50,60 @@ namespace ProjectsTool.Controllers
                         EndDate = l.Project.EndDate,
                         IsFinish = l.Project.IsFinish,
                         ClientName = ClientName.Name,
-                        ManagerName = ManagerName.Name
+                        ManagerName = ManagerName.Name,
+                        IDProject = l.IDProject,
 
                     }).ToList();
 
+                    //projectResources = db.ActiveProject.Include(m => m.Person).Where(l => l.IDPerson == a.IDPerson).Select(l => new ProjectResource()
+                    //{
+                    //    Serial = l.Person.Serial,
+                    //    Name = l.Person.Name,
+                    //    Surname = l.Person.Surname,
+                    //    Email = l.Person.EMail,
+                    //    Percentage = l.Percentage
+                    //}).ToList();
+
                     Proj.Add(Projects[0]);
 
-                    resources = db.Person.Where(l => l.IDPerson == a.IDPerson).ToList();
+                    //resources.Add(projectResources[0]);
             }
 
             }
                 
 
             projectModel.Projects = Proj;
-            projectModel.Resources = resources;
+            //projectModel.ProjectResources = resources;
                 return View(projectModel);
+        }
+
+        public ActionResult GetResources(int IDProject)
+        {
+            List<ProjectResource> projectResources = new List<ProjectResource>();
+            List<ActiveProject> activeProjects = new List<ActiveProject>();
+            List<ProjectResource> resources = new List<ProjectResource>();
+            ProjectModel projectModel = new ProjectModel();
+
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                activeProjects = db.ActiveProject.Where(l => l.IDProject == IDProject).ToList();
+
+                foreach (ActiveProject a in activeProjects)
+                {
+                    projectResources = db.ActiveProject.Include(m => m.Person).Where(l => l.IDPerson == a.IDPerson).Select(l => new ProjectResource()
+                    {
+                        Serial = l.Person.Serial,
+                        Name = l.Person.Name,
+                        Surname = l.Person.Surname,
+                        Email = l.Person.EMail,
+                        Percentage = l.Percentage
+                    }).ToList();
+
+                    resources.Add(projectResources[0]);
+                }
+                projectModel.ProjectResources = resources;
+                return Json(new { projectModel.ProjectResources } , JsonRequestBehavior.AllowGet);
+            }
         }
 
         public ActionResult Resources()
