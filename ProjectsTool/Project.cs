@@ -22,8 +22,8 @@ namespace ProjectsTool
     
         public int IDProject { get; set; }
         public string ProjectName { get; set; }
-        public System.DateTime StartDate { get; set; }
-        public System.DateTime EndDate { get; set; }
+        public System.DateTime? StartDate { get; set; }
+        public System.DateTime? EndDate { get; set; }
         public bool IsFinish { get; set; }
         public int IDClient { get; set; }
         public int IDPerson { get; set; }
