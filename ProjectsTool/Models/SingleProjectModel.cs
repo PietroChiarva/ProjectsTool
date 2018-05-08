@@ -17,5 +17,6 @@ namespace ProjectsTool.Models
         public string ClientName { get; set; }
         public string ManagerName { get; set; }
         public int IDProject { get; set; }
+        public int Percentage { get; set; }
     }
 }

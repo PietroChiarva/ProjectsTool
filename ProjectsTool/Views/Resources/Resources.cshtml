@@ -97,9 +97,9 @@
                 @Html.DisplayFor(modelItem => item.Role.Role1)
             </td>*@
             <td>
-                <a class="btn btn-primary" onclick="ShowProjectModal ('@item.IDPerson')"><img src="~/Images/.png" /></a>
+                <a class="btn btn-primary" onclick="ShowProjectModal ('@item.IDPerson')">View Project</a>
                 <a class="btn btn-primary" onclick="ShowViewModal ('@item.IDPerson')"><img src="~/Images/story.png" /></a>
-                <a class="btn btn-primary" onclick="ShowAssegnaModal ('@item.IDPerson')"><img src="~/Images/.png" /></a>
+                <a class="btn btn-primary" onclick="ShowAssegnaModal ('@item.IDPerson')">Add Project</a>
             </td>
         </tr>
 }
@@ -108,22 +108,15 @@
 </body>
 
 <script type="text/javascript">
-    //function ShowProjectModal(IDPerson) {
+    
 
-    //    //window.open(Router.action('Resources', 'Details', { IDPerson: IDPerson }));
-    //    //$('#showModal .modal-body').load(Router.action('Employee', 'Index', { UserID: UserID }));
-    //    //$('#showModal').modal("show");
+    function ShowProjectModal(IDPerson) {
 
-
-    //}
-
-    //function ShowProjectModal(IDPerson) {
-
-    //    $('#showModal .modal-body').load(Router.action('Resources', 'AddTask', { IDPerson: IDPerson}));
-    //    $('#showModal').modal("show");
+        $('#showModal .modal-body').load(Router.action('Resources', 'ResourceProject', { IDPerson: IDPerson}));
+        $('#showModal').modal("show");
 
 
-    ////}
+    }
 
     //function ShowViewModal(UserID) {
 
@@ -178,3 +171,4 @@
     }
 
 </script>
+
