@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web;
+using System;
 
 namespace ProjectsTool.Controllers
 {
@@ -21,7 +22,7 @@ namespace ProjectsTool.Controllers
             Person ManagerName = null;
             Client ClientName = null;
             List<ActiveProject> activeProjects = new List<ActiveProject>();
-            Project projects = null;
+            List<Project> projects = new List<Project>();
             List<SingleProjectModel> Proj = new List<SingleProjectModel>();
             List<ProjectResource> projectResources = new List<ProjectResource>();
 
@@ -35,25 +36,41 @@ namespace ProjectsTool.Controllers
                 //    IDPerson = d.IDPerson;
                 //}
 
-
-                activeProjects = db.ActiveProject.ToList();
-                
-                foreach (ActiveProject a in activeProjects)
+                    projects = db.Project.ToList();
+                foreach (Project a in projects)
                 {
-                    projects = db.Project.Where(l => l.IDProject == a.IDProject).FirstOrDefault();
-                    ClientName = db.Client.Where(l => l.IDClient == projects.IDClient).FirstOrDefault();
-                    ManagerName = db.Person.Where(l => l.IDPerson == projects.IDPerson).FirstOrDefault();
-                    Projects = db.ActiveProject.Include(m => m.Project).Where(l => l.IDProject == a.IDProject).Select(l => new SingleProjectModel()
+                    ClientName = db.Client.Where(l => l.IDClient == a.IDClient).FirstOrDefault();
+                    ManagerName = db.Person.Where(l => l.IDPerson == a.IDPerson).FirstOrDefault();
+                    Projects = db.Project.Where(l => l.IDProject == a.IDProject).Select(l => new SingleProjectModel()
                     {
-                        ProjectName = l.Project.ProjectName,
-                        StartDate = l.Project.StartDate,
-                        EndDate = l.Project.EndDate,
-                        IsFinish = l.Project.IsFinish,
+                        ProjectName = l.ProjectName,
+                        StartDate = l.StartDate,
+                        EndDate = l.EndDate,
+                        IsFinish = l.IsFinish,
                         ClientName = ClientName.Name,
                         ManagerName = ManagerName.Name,
                         IDProject = l.IDProject,
 
                     }).ToList();
+                    Proj.Add(Projects[0]);
+                }
+                activeProjects = db.ActiveProject.ToList();
+                foreach (ActiveProject a in activeProjects)
+                {
+                    //projects = db.Project.Where(l => l.IDProject == a.IDProject).FirstOrDefault();
+                    //ClientName = db.Client.Where(l => l.IDClient == projects.IDClient).FirstOrDefault();
+                    //ManagerName = db.Person.Where(l => l.IDPerson == projects.IDPerson).FirstOrDefault();
+                    //Projects = db.ActiveProject.Include(m => m.Project).Where(l => l.IDProject == a.IDProject).Select(l => new SingleProjectModel()
+                    //{
+                    //    ProjectName = l.Project.ProjectName,
+                    //    StartDate = l.Project.StartDate,
+                    //    EndDate = l.Project.EndDate,
+                    //    IsFinish = l.Project.IsFinish,
+                    //    ClientName = ClientName.Name,
+                    //    ManagerName = ManagerName.Name,
+                    //    IDProject = l.IDProject,
+
+                    //}).ToList();
 
                     //projectResources = db.ActiveProject.Include(m => m.Person).Where(l => l.IDPerson == a.IDPerson).Select(l => new ProjectResource()
                     //{
@@ -64,7 +81,7 @@ namespace ProjectsTool.Controllers
                     //    Percentage = l.Percentage
                     //}).ToList();
 
-                    Proj.Add(Projects[0]);
+                    
 
                     //resources.Add(projectResources[0]);
             }
@@ -106,6 +123,35 @@ namespace ProjectsTool.Controllers
             }
         }
 
+        public ActionResult SeeResource(int IDProject)
+        {
+            List<ActiveProject> activeProjects = new List<ActiveProject>();
+            List<ProjectResource> projectResources = new List<ProjectResource>();
+            List<ProjectResource> freeResources = new List<ProjectResource>();
+
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                activeProjects = db.ActiveProject.ToList();
+                foreach (ActiveProject a in activeProjects)
+                {
+                    projectResources = db.ActiveProject.Include(m => m.Person).Select(l => new ProjectResource()
+                    {
+                        Serial = l.Person.Serial,
+                        Name = l.Person.Name,
+                        Surname = l.Person.Surname,
+                        Email = l.Person.EMail,
+                        Percentage = l.Percentage
+                    }).ToList();
+
+                    if(projectResources[0].Percentage < 100)
+                    {
+                        freeResources.Add(projectResources[0]);
+                    }
+                }
+            }
+            return PartialView();
+        }
+
         public ActionResult ModifyForm(int IDProject)
         {
             Project project = null;
@@ -144,7 +190,7 @@ namespace ProjectsTool.Controllers
             {
                 project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
                 activeProject = db.ActiveProject.Where(l => l.IDProject == project.IDProject).ToList();
-                if (activeProject != null)
+                if (activeProject.Count != 0)
                 {
                     TempData["msg"] = "<script>alert('There some active resources ih this project!');</script>";
                 }
@@ -152,18 +198,57 @@ namespace ProjectsTool.Controllers
             return PartialView(project);
         }
 
-        public ActionResult DoDeleteProject(Project data)
+        public ActionResult DoDeleteProject(int IDProject)
         {
             Project project = null;
            
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                project = db.Project.Where(l => l.IDProject == data.IDProject).FirstOrDefault();
+                project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
                
                 db.Project.Remove(project);
                 db.SaveChanges();
             }
             return RedirectToAction("Index");
+        }
+
+        public ActionResult ConcludeModal(int IDProject)
+        {
+            Project project = null;
+            
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
+                
+            }
+            return PartialView(project);
+        }
+
+        public ActionResult DoConcludeProject(int IDProject)
+        {
+            List<ActiveProject> activeProjects = new List<ActiveProject>();
+            Project project = null;
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
+                activeProjects = db.ActiveProject.Where(l => l.IDProject == IDProject).ToList();
+                if(activeProjects.Count != 0)
+                {
+                    project.IsFinish = true;
+                    project.EndDate = DateTime.Now;
+                    foreach(ActiveProject a in activeProjects)
+                    {
+                        a.EndActiveDate = DateTime.Now;
+                       
+                    }
+                }
+                else
+                {
+                    TempData["mex"] = "<script>alert('This project is not active, you can't conclude it!');</script>";
+                }
+            }
+
+                return RedirectToAction("Index");
         }
 
         public ActionResult AddProject()

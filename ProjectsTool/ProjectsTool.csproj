@@ -487,6 +487,7 @@
     <Content Include="Views\Resources\ResourceProject.cshtml" />
     <Content Include="Views\Home\ModifyForm.cshtml" />
     <Content Include="Views\Home\DeleteModal.cshtml" />
+    <Content Include="Views\Home\ConcludeModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
