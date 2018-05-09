@@ -5,12 +5,14 @@ using System.Web;
 
 namespace ProjectsTool.Models
 {
-    public class ClientList : Client
+    public class ClientList : ProjectToolsEntities
     {
-        public ClientList()
-        {
-            clients = new List<Client>();
-        }
-        public List<Client> clients { get; set; }
+        public int IDClient { get; set; }
+        public string Name { get; set; }
+        public string Society { get; set; }
+        public string NumberPhone { get; set; }
+        public string Email { get; set; }
+        public string PartitaIva { get; set; }
+
     }
 }

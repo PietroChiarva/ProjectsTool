@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectsTool.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,11 +14,14 @@ namespace ProjectsTool.Controllers
         {
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                List<Client> c = null;
+                
+                List<Client> c = new List<Client>();
+                ProjectModel project = new ProjectModel();
                 c = db.Client.ToList();
 
+                project.Clients = c;
 
-                return View(c);
+                return View(project);
             }
         }
 
@@ -27,7 +31,7 @@ namespace ProjectsTool.Controllers
             {
 
             }
-                return View();
+                return PartialView();
         }
 
         public ActionResult _JSONAddNewClient(Client data)
