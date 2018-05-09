@@ -261,7 +261,7 @@ namespace ProjectsTool.Controllers
 
                 
             }
-            return View();
+            return PartialView();
         }
 
         public ActionResult _JSONAddProject(Project data)

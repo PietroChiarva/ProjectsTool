@@ -9,8 +9,8 @@ namespace ProjectsTool.Models
     {
         public ClientList()
         {
-            ResultList = new List<Client>();
+            clients = new List<Client>();
         }
-        public List<Client> ResultList { get; set; }
+        public List<Client> clients { get; set; }
     }
 }
