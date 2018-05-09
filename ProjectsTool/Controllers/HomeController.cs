@@ -181,8 +181,6 @@ namespace ProjectsTool.Controllers
 
         public ActionResult _JSONAddProject(Project data)
         {
-
-            int IDPerson = 0;
             string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
             if (!string.IsNullOrEmpty(data.ProjectName) &&  data.StartDate.HasValue && data.EndDate.HasValue /*&& data.Client.IDClient != 0*/)
             {
