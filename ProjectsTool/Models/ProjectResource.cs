@@ -5,12 +5,9 @@ using System.Web;
 
 namespace ProjectsTool.Models
 {
-    public class ProjectResource
+    public class ProjectResource : ProjectToolsEntities
     {
-        public string Serial { get; set; }
-        public string Name { get; set; }
-        public string Surname {get; set;}
-        public string Email { get; set; }
+        public Person Resources { get; set; }
         public int Percentage { get; set; }
     }
 }

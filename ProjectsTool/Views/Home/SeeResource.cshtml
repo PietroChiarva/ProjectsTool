@@ -1,0 +1,59 @@
+﻿@model ProjectsTool.Models.AddResourceModel
+
+
+<table class="table">
+    <tr>
+        <th>
+           Serial
+        </th>
+        <th>
+           Name
+        </th>
+        <th>
+            Surname
+        </th>
+        <th>
+           E-Mail
+        </th>
+        <th>
+            Percentage
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.ProjectResources) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Resources.Serial)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Resources.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Resources.Surname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Resources.EMail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Percentage) %
+        </td>
+        <td>
+            <a class="btn btn-primary" onclick="ShowPercentageModal ('@item.Resources.IDPerson', '@Model.IDProject')">Add</a>
+        </td>
+
+    </tr>
+}
+
+</table>
+
+<script type="text/javascript">
+
+    function ShowPercentageModal(IDPerson, IDProject) {
+
+        $('#showModal .modal-body').load(Router.action('Home', 'ResourcePercentage', { IDPerson: IDPerson , IDProject: IDProject }));
+        $('#showModal').modal("show");
+
+
+    }
+</script>
