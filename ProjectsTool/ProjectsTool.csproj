@@ -490,6 +490,11 @@
     <Content Include="Views\ClientSection\AddNewClient.cshtml" />
     <Content Include="Views\ClientSection\ClientSection.cshtml" />
     <Content Include="Views\Home\DeleteModal.cshtml" />
+    <Content Include="Views\ClientSection\ClientProject.cshtml" />
+    <Content Include="Views\Home\ConcludeModal.cshtml" />
+    <Content Include="Views\ClientSection\EditClient.cshtml" />
+    <Content Include="Views\ClientSection\DeleteClient.cshtml" />
+    <Content Include="Views\Resources\ProjectStoryResource.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -117,7 +117,7 @@
         <td>
             <a class="btn btn-primary" onclick="ShowProjectClient ('@item.IDClient')">View Project</a>
             <a class="btn btn-primary" onclick="ShowEditClient ('@item.IDClient')">Edit Client</a>
-            <a class="btn btn-primary" onclick="CancelClient ('@item.IDClient')">Delete Client</a>
+            <a class="btn btn-primary" onclick="ShowDeleteClient ('@item.IDClient')">Delete Client</a>
         </td>
     </tr>
     }
@@ -132,6 +132,28 @@
     function ShowAddNewClientModal() {
 
         $('#showModal .modal-body').load(Router.action('ClientSection','AddNewClient'));
+        $('#showModal').modal("show");
+
+
+    }
+
+    function ShowProjectClient(IDClient) {
+
+        $('#showModal .modal-body').load(Router.action('ClientSection', 'ClientProject',{IDClient: IDClient}));
+        $('#showModal').modal("show");
+
+
+    }
+
+    function ShowEditClient(IDClient) {
+
+        $('#showModal .modal-body').load(Router.action('ClientSection', 'EditClient', { IDClient: IDClient }));
+        $('#showModal').modal("show");
+    }
+
+    function ShowDeleteClient(IDClient) {
+
+        $('#showModal .modal-body').load(Router.action('ClientSection', 'DeleteClient', { IDClient: IDClient }));
         $('#showModal').modal("show");
 
 
@@ -162,7 +184,7 @@
         table = document.getElementById("myTable");
         tr = table.getElementsByTagName("tr");
         for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[1];
+            td = tr[i].getElementsByTagName("td")[0];
             if (td) {
                 if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
                     tr[i].style.display = "";
