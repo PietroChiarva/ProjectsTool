@@ -62,7 +62,7 @@
 <h2>Home Page</h2>
 
 <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-10">
         <table class="table">
 
             @foreach (var item in Model.Projects)
@@ -150,7 +150,7 @@
 
 
 
-    <div class="col-sm-4">
+    <div class="col-sm-2">
         <div class="card" id="Resource">
             <div class="card-body text-center">
                 <h5 class="card-title"></h5>
@@ -162,7 +162,7 @@
         <div class="card" id="AddProject">
             <div class="card-body text-center">
                 <h5 class="card-title"></h5>
-                <a class="button" href="@Url.Action("AddProject","Home")" @*onclick="ShowProjectModal()"*@>ADD NEW PROJECT</a>
+                <a class="button" onclick="ShowAddProjectModal()">ADD NEW PROJECT</a>
             </div>
         </div>
 
@@ -192,6 +192,15 @@
 
 
     }
+
+    function ShowAddProjectModal() {
+
+        $('#showModal .modal-body').load(Router.action('Home', 'AddProject'));
+        $('#showModal').modal("show");
+
+
+    }
+
 
 
 
@@ -244,14 +253,7 @@
 
     //}
 
-    function ShowProjectModal() {
-
-        $('#showModal .modal-body').load(Router.action('Home', 'AddProject'));
-        $('#showModal').modal("show");
-
-
-    }
-
+    
     //function ShowViewModal(UserID) {
 
     //    $('#showModal .modal-body').load(Router.action('Manager', 'ViewTask', { UserID: UserID }));

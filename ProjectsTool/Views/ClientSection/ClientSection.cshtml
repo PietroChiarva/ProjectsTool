@@ -1,5 +1,9 @@
-﻿@model IEnumerable<ProjectsTool.Client>
+﻿@model ProjectsTool.Models.ClientList
 
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <head>
 
     <style>
@@ -22,30 +26,30 @@
             border-radius: 12px;
         }
 
-            .button span {
-                cursor: pointer;
-                display: inline-block;
-                position: relative;
+        .button span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+
+            .button span:after {
+                content: '\00bb';
+                position: absolute;
+                opacity: 0;
+                top: 0;
+                right: -20px;
                 transition: 0.5s;
             }
 
-                .button span:after {
-                    content: '\00bb';
-                    position: absolute;
-                    opacity: 0;
-                    top: 0;
-                    right: -20px;
-                    transition: 0.5s;
-                }
+        .button:hover span {
+            padding-right: 25px;
+        }
 
-            .button:hover span {
-                padding-right: 25px;
+            .button:hover span:after {
+                opacity: 1;
+                right: 0;
             }
-
-                .button:hover span:after {
-                    opacity: 1;
-                    right: 0;
-                }
     </style>
 
 </head>
@@ -57,32 +61,38 @@
             <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Firstname of resource" title="Type in a name">
         </div>
 
-            <div class="col-sm-4">
-                <a align="right" href="@Url.Action("AddNewClient","ClientSection")" class="button button5">Add New Client</a>
-            </div>
+        <div class="col-sm-4">
+            <a @*href="@Url.Action("AddNewClient","ClientSection")"*@ onclick="ShowAddNewClientModal()" class="button button5">Add New Client</a>
         </div>
-        <table class="table" id="myTable">
+    </div>
+    <table class="table" id="myTable">
+
+        @foreach (var item in Model.clients)
+        {
+            if (Model.clients.IndexOf(item) == 0 || Model.clients.Count == 0)
+
+            {
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    @Html.DisplayNameFor(model => item.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Society)
+                    @Html.DisplayNameFor(model => item.Society)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.NumberPhone)
+                    @Html.DisplayNameFor(model => item.NumberPhone)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Email)
+                    @Html.DisplayNameFor(model => item.Email)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.PartitaIva)
+                    @Html.DisplayNameFor(model => item.PartitaIva)
                 </th>
                 <th></th>
             </tr>
+            }
 
-            @foreach (var item in Model)
-        {
+            
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
@@ -107,12 +117,20 @@
             </tr>
     }
 
-        </table>
+    </table>
 
 </body>
 
 
 <script>
+
+    function ShowAddNewClientModal()) {
+
+        $('#showModal .modal-body').load(Router.action('AddNewClient', 'ClientSection'));
+        $('#showModal').modal("show");
+
+
+    }
 
     // When the user scrolls down 20px from the top of the document, show the button
     window.onscroll = function () { scrollFunction() };
