@@ -1,0 +1,17 @@
+﻿@model ProjectsTool.Project
+
+@Html.Raw(TempData["msg"])
+
+<h3>Are you sure you want to delete this project?</h3>
+
+
+@using (Html.BeginForm("DoDeleteProject", "Home", null, FormMethod.Post))
+{
+
+
+    <div class="form-actions no-color">
+        <input type="submit" value="Delete" class="btn btn-default" />
+
+    </div>
+}
+
