@@ -214,6 +214,7 @@
       <DependentUpon>ProjectsTool.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ClientSectionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HomePageController.cs" />
     <Compile Include="Controllers\ResourcesController.cs" />
@@ -222,7 +223,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AdalTokenCache.cs" />
+    <Compile Include="Models\AddResourceModel.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="Models\ClientList.cs" />
     <Compile Include="Models\ProjectModel.cs" />
     <Compile Include="Models\ProjectResource.cs" />
     <Compile Include="Models\ResourceList.cs" />
@@ -488,6 +491,9 @@
     <Content Include="Views\Home\ModifyForm.cshtml" />
     <Content Include="Views\Home\DeleteModal.cshtml" />
     <Content Include="Views\Home\ConcludeModal.cshtml" />
+    <Content Include="Views\ClientSection\AddNewClient.cshtml" />
+    <Content Include="Views\ClientSection\ClientSection.cshtml" />
+    <Content Include="Views\Home\SeeResource.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

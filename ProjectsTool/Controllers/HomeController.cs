@@ -109,14 +109,11 @@ namespace ProjectsTool.Controllers
                 {
                     projectResources = db.ActiveProject.Include(m => m.Person).Where(l => l.IDPerson == a.IDPerson).Select(l => new ProjectResource()
                     {
-                        Serial = l.Person.Serial,
-                        Name = l.Person.Name,
-                        Surname = l.Person.Surname,
-                        Email = l.Person.EMail,
-                        Percentage = l.Percentage
+                    Resources = l.Person,
+                    Percentage = l.Percentage
                     }).ToList();
 
-                    resources.Add(projectResources[0]);
+                resources.Add(projectResources[0]);
                 }
                 projectModel.ProjectResources = resources;
                 return Json(new { projectModel.ProjectResources } , JsonRequestBehavior.AllowGet);
@@ -126,30 +123,86 @@ namespace ProjectsTool.Controllers
         public ActionResult SeeResource(int IDProject)
         {
             List<ActiveProject> activeProjects = new List<ActiveProject>();
-            List<ProjectResource> projectResources = new List<ProjectResource>();
+            ProjectResource projectResources = new ProjectResource();
             List<ProjectResource> freeResources = new List<ProjectResource>();
+            List<Person> resources = new List<Person>();
+            AddResourceModel model = new AddResourceModel();
+            List<int> resourcesPercentage = new List<int>();
+            List<int> arrayResource = new List<int>();
+            bool flag = false;
+            bool activeFlag = false;
 
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
+                resources = db.Person.Where(l => l.IDRole == 0).ToList();
                 activeProjects = db.ActiveProject.ToList();
-                foreach (ActiveProject a in activeProjects)
-                {
-                    projectResources = db.ActiveProject.Include(m => m.Person).Select(l => new ProjectResource()
-                    {
-                        Serial = l.Person.Serial,
-                        Name = l.Person.Name,
-                        Surname = l.Person.Surname,
-                        Email = l.Person.EMail,
-                        Percentage = l.Percentage
-                    }).ToList();
 
-                    if(projectResources[0].Percentage < 100)
+                //controllo della percentuale delle risorse, se sono libere, se percentuale < 100
+                //se rispettano i controlli vengono visualizzate
+                foreach (Person p in resources)
+                {
+                    activeFlag = false;
+                    foreach (ActiveProject z in activeProjects)
                     {
-                        freeResources.Add(projectResources[0]);
+                        if(p.IDPerson == z.IDPerson)
+                        {
+                            activeFlag = true;
+                        }
+                    }
+                    
+                    foreach (ActiveProject a in activeProjects)
+                    {
+                        foreach (int i in arrayResource)
+                        {
+                            if (p.IDPerson == i && a.IDPerson == p.IDPerson)
+                            {
+                                if (a.Percentage + resourcesPercentage[i] == 100)
+                                {
+                                    flag = true;
+                                }
+                                else
+                                {
+                                    flag = false;
+                                }
+                            }
+                        }
+                        if (p.IDPerson == a.IDPerson && flag == false)
+                        {
+                            projectResources.Percentage = a.Percentage;
+                            if (projectResources.Percentage < 100)
+                            {
+                                projectResources.Resources = p;
+                                projectResources.Percentage = a.Percentage;
+                                activeFlag = true;
+                                resourcesPercentage.Add(projectResources.Percentage);
+                                arrayResource.Add(projectResources.Resources.IDPerson);
+                                freeResources.Add(projectResources);
+                            }
+                        }
+                        else if (p.IDPerson != a.IDPerson && activeFlag == false)
+                        {
+                            projectResources.Resources = p;
+                            projectResources.Percentage = 0;
+                            resourcesPercentage.Add(projectResources.Percentage);
+                            arrayResource.Add(projectResources.Resources.IDPerson);
+                            freeResources.Add(projectResources);
+                            activeFlag = true;
+
+                        }
+                        
+                        
+                        
+                           
+                        }
+                        
                     }
                 }
-            }
-            return PartialView();
+               
+            
+
+            model.ProjectResources = freeResources;
+            model.IDProject = IDProject;
+            return PartialView(model);
         }
 
         public ActionResult ModifyForm(int IDProject)
