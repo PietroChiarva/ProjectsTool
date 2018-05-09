@@ -201,7 +201,7 @@
     }
     function ShowConcludeModal(IDProject){
 
-        $('#showModal .modal-body').load(Router.action('Home', 'ModifyForm', { IDProject: IDProject }));
+        $('#showModal .modal-body').load(Router.action('Home', 'ConcludeModal', { IDProject: IDProject }));
         $('#showModal').modal("show");
 
 

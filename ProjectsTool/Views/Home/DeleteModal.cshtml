@@ -8,6 +8,7 @@
 @using (Html.BeginForm("DoDeleteProject", "Home", null, FormMethod.Post))
 {
 
+    @Html.HiddenFor(model => model.IDProject)
 
     <div class="form-actions no-color">
         <input type="submit" value="Delete" class="btn btn-default" />
