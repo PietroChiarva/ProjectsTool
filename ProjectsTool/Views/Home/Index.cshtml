@@ -192,6 +192,20 @@
 
 
     }
+    function ShowDeleteModal(IDProject) {
+
+        $('#showModal .modal-body').load(Router.action('Home', 'DeleteModal', { IDProject: IDProject }));
+        $('#showModal').modal("show");
+
+
+    }
+    function ShowConcludeModal(IDProject){
+
+        $('#showModal .modal-body').load(Router.action('Home', 'ModifyForm', { IDProject: IDProject }));
+        $('#showModal').modal("show");
+
+
+    }
 
     function ShowAddProjectModal() {
 

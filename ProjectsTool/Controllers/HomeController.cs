@@ -136,6 +136,36 @@ namespace ProjectsTool.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult DeleteModal(int IDProject)
+        {
+            Project project = null;
+            List<ActiveProject> activeProject = new List<ActiveProject>();
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
+                activeProject = db.ActiveProject.Where(l => l.IDProject == project.IDProject).ToList();
+                if (activeProject != null)
+                {
+                    TempData["msg"] = "<script>alert('There some active resources ih this project!');</script>";
+                }
+            }
+            return PartialView(project);
+        }
+
+        public ActionResult DoDeleteProject(Project data)
+        {
+            Project project = null;
+           
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                project = db.Project.Where(l => l.IDProject == data.IDProject).FirstOrDefault();
+               
+                db.Project.Remove(project);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
         public ActionResult AddProject()
         {
             List<Client> clientlist = new List<Client>();
