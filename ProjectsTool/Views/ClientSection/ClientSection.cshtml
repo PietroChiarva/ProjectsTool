@@ -1,4 +1,5 @@
-﻿@model ProjectsTool.Models.ClientList
+﻿@*@model ProjectsTool.Models.ClientList*@
+@model ProjectsTool.Models.ProjectModel
 
 @{
     ViewBag.Title = "Index";
@@ -67,12 +68,16 @@
     </div>
     <table class="table" id="myTable">
 
-        @foreach (var item in Model.clients)
+        @*@foreach (var item in Model.clients)
         {
-            if (Model.clients.IndexOf(item) == 0 || Model.clients.Count == 0)
+            if (Model.clients.IndexOf(item) == 0)
 
-            {
-            <tr>
+            {*@
+        @foreach (var item in Model.Clients)
+    {
+        if (Model.Clients.IndexOf(item) == 0)
+        {
+            <tr >
                 <th>
                     @Html.DisplayNameFor(model => item.Name)
                 </th>
@@ -90,31 +95,31 @@
                 </th>
                 <th></th>
             </tr>
-            }
+    }
+   
 
-            
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Society)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumberPhone)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PartitaIva)
-                </td>
-                <td>
-                    <a class="btn btn-primary" onclick="ShowProjectClient ('@item.IDClient')">View Project</a>
-                    <a class="btn btn-primary" onclick="ShowEditClient ('@item.IDClient')">Edit Client</a>
-                    <a class="btn btn-primary" onclick="CancelClient ('@item.IDClient')">Delete Client</a>
-                </td>
-            </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Society)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberPhone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PartitaIva)
+        </td>
+        <td>
+            <a class="btn btn-primary" onclick="ShowProjectClient ('@item.IDClient')">View Project</a>
+            <a class="btn btn-primary" onclick="ShowEditClient ('@item.IDClient')">Edit Client</a>
+            <a class="btn btn-primary" onclick="CancelClient ('@item.IDClient')">Delete Client</a>
+        </td>
+    </tr>
     }
 
     </table>
@@ -124,9 +129,9 @@
 
 <script>
 
-    function ShowAddNewClientModal()) {
+    function ShowAddNewClientModal() {
 
-        $('#showModal .modal-body').load(Router.action('AddNewClient', 'ClientSection'));
+        $('#showModal .modal-body').load(Router.action('ClientSection','AddNewClient'));
         $('#showModal').modal("show");
 
 
