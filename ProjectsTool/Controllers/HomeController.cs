@@ -142,6 +142,7 @@ namespace ProjectsTool.Controllers
                 foreach (Person p in resources)
                 {
                     activeFlag = false;
+                    projectResources = new ProjectResource();
                     foreach (ActiveProject z in activeProjects)
                     {
                         if(p.IDPerson == z.IDPerson)
@@ -159,6 +160,7 @@ namespace ProjectsTool.Controllers
                                 if (a.Percentage + resourcesPercentage[i] == 100)
                                 {
                                     flag = true;
+                                    freeResources.Remove(freeResources[i]);
                                 }
                                 else
                                 {
