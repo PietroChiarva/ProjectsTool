@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-
 namespace ProjectsTool.Models
 {
-    public class ActiveResourceModel
+    public class AddProjectModel
     {
-        public int ProjectResource { get; set; }
-        public ActiveProject ActiveProject { get; set; }
+        public List<ProjectResource> ProjectResources { get; set; }
         public int IDProject { get; set; }
-        
-      
+        public int IDPerson { get; set; }
+
     }
 }

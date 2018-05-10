@@ -106,5 +106,62 @@ namespace ProjectsTool.Controllers
 
             return PartialView(ProjectResource);
         }
+
+        public ActionResult AddProjectResource(int IDPerson, int IDProject)
+        {
+            ActiveProjectModel projectResource = new ActiveProjectModel();
+            Project projects = null;
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                projects = db.Project.Where(l => l.IDPerson == IDPerson).FirstOrDefault();
+            }
+            projectResource.ProjectResource = projects.IDProject;
+            projectResource.IDPerson= IDPerson;
+
+            return PartialView(projectResource);
+        }
+
+        public ActionResult DoAddProjectResource(ActiveResourceModel data)
+        {
+            List<ActiveProject> activeProject = new List<ActiveProject>();
+            ActiveProject projectToAdd = new ActiveProject();
+            bool flag = false;
+            int percentage = 0;
+
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                activeProject = db.ActiveProject.ToList();
+                foreach (ActiveProject a in activeProject)
+                {
+                    if (data.ProjectResource == a.IDPerson)
+                    {
+                        percentage += a.Percentage;
+                        flag = true;
+                    }
+                    else if (data.ProjectResource != a.IDPerson && flag == false)
+                    {
+                        percentage += a.Percentage;
+                    }
+
+                }
+                if ((data.ActiveProject.Percentage + percentage) <= 100)
+                {
+                    projectToAdd.IDPerson = data.ProjectResource;
+                    projectToAdd.IDProject = data.IDProject;
+                    projectToAdd.Percentage = data.ActiveProject.Percentage;
+                    projectToAdd.StartActiveDate = data.ActiveProject.StartActiveDate;
+                    projectToAdd.EndActiveDate = data.ActiveProject.EndActiveDate;
+                    db.ActiveProject.Add(projectToAdd);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    TempData["msg"] = "<script>alert('The percentage is bigger than 100%!');</script>";
+                }
+            }
+            return RedirectToAction("AssegnaProject");
+        }
+
+
     }
 }

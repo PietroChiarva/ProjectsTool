@@ -6,54 +6,72 @@
     @foreach (var item in Model.projects)
     {
         if (Model.projects.IndexOf(item) == 0 || Model.projects.Count == 0)
+
         {
 
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => item.ProjectName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.StartDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.EndDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.IsFinish)
-                </th>
-                @*<th>
+        <tr>
+            <th>
+                @*ProjectName*@
+                @Html.DisplayNameFor(model => item.ProjectName)
+            </th>
+            <th>
+                @*StartDate*@
+                @Html.DisplayNameFor(model => item.StartDate)
+            </th>
+            <th>
+                @*EndDate*@
+                @Html.DisplayNameFor(model => item.EndDate)
+            </th>
+            <th>
+                @*IsFinish*@
+                @Html.DisplayNameFor(model => item.IsFinish)
+            </th>
+            @*<th>
                     @Html.DisplayNameFor(model => item.Client.Name)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => item.Person.Serial)
                 </th>*@
-                <th></th>
-            </tr>
-        }
-           
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ProjectName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsFinish)
-                    </td>
-                    @*<td>
-                        @Html.DisplayFor(modelItem => item.Client.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Person.Serial)
-                    </td>*@
-                    <td>
-                        <a class="btn btn-primary" onclick="AddTask @*('@item.TaskID', '@Model.UsersID')*@">Add Project</a>
-                    </td>
-                </tr>
-            }
+            <th></th>
+        </tr>
 
-        </table>
+        }
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsFinish)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Client.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Person.Serial)
+                </td>*@
+            <td>
+                <a class="btn btn-primary" onclick="ShowAddProjectResourceModal ('@item.Person.IDPerson', '@Model.IDProject')">Add Project</a>
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+<script type="text/javascript">
+
+    function ShowAddProjectResourceModal(IDPerson, IDProject) {
+
+        $('#showModal2 .modal-body').load(Router.action('Resources', 'AddProjectResource', { IDPerson: IDPerson, IDProject: IDProject }));
+        $('#showModal2').modal("show");
+
+
+    }
+</script>
