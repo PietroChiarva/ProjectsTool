@@ -85,5 +85,19 @@ namespace ProjectsTool.Controllers
             }
             return PartialView(projects);
         }
+
+        public ActionResult AssegnaProject(int IDPerson)
+        {
+            ProjectResourceView ProjectResource = new ProjectResourceView();
+
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                ProjectResource.projects = db.Project.ToList();
+            }
+
+            ProjectResource.IDPerson = IDPerson;
+
+                return PartialView(ProjectResource);
+        }
     }
 }
