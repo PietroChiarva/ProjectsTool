@@ -19,7 +19,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort>44385</IISExpressSSLPort>
+    <IISExpressSSLPort>44377</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -221,13 +221,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ActiveProjectModel.cs" />
     <Compile Include="Models\ActiveResourceModel.cs" />
     <Compile Include="Models\AdalTokenCache.cs" />
+    <Compile Include="Models\AddProjectModel.cs" />
     <Compile Include="Models\AddResourceModel.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\ClientList.cs" />
     <Compile Include="Models\ProjectModel.cs" />
     <Compile Include="Models\ProjectResource.cs" />
+    <Compile Include="Models\ProjectResourceView.cs" />
     <Compile Include="Models\ResourceList.cs" />
     <Compile Include="Models\SingleProjectModel.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
@@ -499,6 +502,8 @@
     <Content Include="Views\Resources\ProjectStoryResource.cshtml" />
     <Content Include="Views\Home\SeeResource.cshtml" />
     <Content Include="Views\Home\AddResourceProject.cshtml" />
+    <Content Include="Views\Resources\AssegnaProject.cshtml" />
+    <Content Include="Views\Resources\AddProjectResource.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
