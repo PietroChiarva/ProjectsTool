@@ -131,6 +131,7 @@ namespace ProjectsTool.Controllers
             List<int> arrayResource = new List<int>();
             bool flag = false;
             bool activeFlag = false;
+            bool projectFlag = false;
 
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
@@ -148,6 +149,14 @@ namespace ProjectsTool.Controllers
                         if(p.IDPerson == z.IDPerson)
                         {
                             activeFlag = true;
+                        }
+                        if(z.IDProject == IDProject && p.IDPerson == z.IDPerson)
+                        {
+                            projectFlag = true;
+                        }
+                        else
+                        {
+                            projectFlag = false;
                         }
                     }
                     
@@ -168,7 +177,7 @@ namespace ProjectsTool.Controllers
                                 }
                             }
                         }
-                        if (p.IDPerson == a.IDPerson && flag == false)
+                        if (p.IDPerson == a.IDPerson && flag == false && projectFlag ==false)
                         {
                             projectResources.Percentage = a.Percentage;
                             if (projectResources.Percentage < 100)
@@ -181,7 +190,7 @@ namespace ProjectsTool.Controllers
                                 freeResources.Add(projectResources);
                             }
                         }
-                        else if (p.IDPerson != a.IDPerson && activeFlag == false)
+                        else if (p.IDPerson != a.IDPerson && activeFlag == false && projectFlag == false)
                         {
                             projectResources.Resources = p;
                             projectResources.Percentage = 0;
@@ -227,6 +236,7 @@ namespace ProjectsTool.Controllers
             ActiveProject projectToAdd = new ActiveProject();
             bool flag = false;
             int percentage = 0;
+            ActiveResourceModel model = new ActiveResourceModel();
 
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
@@ -235,16 +245,17 @@ namespace ProjectsTool.Controllers
                 {
                     if(data.ProjectResource == a.IDPerson)
                     {
-                        percentage += a.Percentage;
+                        percentage += data.ActiveProject.Percentage;
                         flag = true;
                     }
                     else if(data.ProjectResource != a.IDPerson && flag == false)
                     {
-                        percentage += a.Percentage;
+                        percentage += data.ActiveProject.Percentage;
+                        flag = true;
                     }
 
                 }
-                if((data.ActiveProject.Percentage + percentage) <= 100)
+                if((data.ActiveProject.Percentage + percentage) <= 100 && (data.ActiveProject.Percentage + percentage) > 0)
                 {
                     projectToAdd.IDPerson = data.ProjectResource;
                     projectToAdd.IDProject = data.IDProject;
@@ -259,7 +270,9 @@ namespace ProjectsTool.Controllers
                     TempData["msg"] = "<script>alert('The percentage is bigger than 100%!');</script>";
                 }
             }
-                return RedirectToAction("SeeResource");
+            model.ProjectResource = data.ProjectResource;
+            model.IDProject = data.IDProject;
+                return RedirectToAction("SeeResource", model.IDProject);
         }
 
         public ActionResult ModifyForm(int IDProject)
