@@ -12,6 +12,7 @@ namespace ProjectsTool.Models
        public List<Person> Resources { get; set; }
        public List<Project> projects { get; set; }
        public List<Client> Clients { get; set; }
+       
 
     }
 }

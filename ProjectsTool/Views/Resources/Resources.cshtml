@@ -99,7 +99,7 @@
             <td>
                 <a class="btn btn-primary" onclick="ShowProjectModal ('@item.IDPerson')">View Project</a>
                 <a class="btn btn-primary" onclick="ShowProjectStoryModal ('@item.IDPerson')">Project Story</a>
-                <a class="btn btn-primary" onclick="ShowAssegnaModal ('@item.IDPerson')">Add Project</a>
+                <a class="btn btn-primary" onclick="ShowAssegnaProjectModal ('@item.IDPerson')">Add Project</a>
             </td>
         </tr>
 }
@@ -121,6 +121,14 @@
     function ShowProjectStoryModal(IDPerson) {
 
         $('#showModal .modal-body').load(Router.action('Resources', 'ProjectStoryResource', { IDPerson: IDPerson }));
+        $('#showModal').modal("show");
+
+
+    }
+
+    function ShowAssegnaProjectModal(IDPerson) {
+
+        $('#showModal .modal-body').load(Router.action('Resources', 'AssegnaProject', { IDPerson: IDPerson }));
         $('#showModal').modal("show");
 
 
