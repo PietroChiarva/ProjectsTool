@@ -1,0 +1,16 @@
+﻿@model ProjectsTool.Client
+
+@Html.Raw(TempData["msg"])
+
+<h3>Are you sure you want to delete this Client?</h3>
+
+@using (Html.BeginForm("DoDeleteClient", "ClientSection", null, FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.IDClient)
+
+    <div class="form-actions no-color">
+        <input type="submit" value="Delete" class="btn btn-default" /> 
+       
+    </div>
+}
+
