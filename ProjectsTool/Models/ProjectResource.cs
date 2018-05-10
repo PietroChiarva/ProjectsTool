@@ -9,5 +9,6 @@ namespace ProjectsTool.Models
     {
         public Person Resources { get; set; }
         public int Percentage { get; set; }
+        
     }
 }

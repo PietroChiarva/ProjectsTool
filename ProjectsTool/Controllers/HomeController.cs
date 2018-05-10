@@ -157,7 +157,7 @@ namespace ProjectsTool.Controllers
                         {
                             if (p.IDPerson == i && a.IDPerson == p.IDPerson)
                             {
-                                if (a.Percentage + resourcesPercentage[i] == 100)
+                                if ((a.Percentage + resourcesPercentage[i]) == 100)
                                 {
                                     flag = true;
                                     freeResources.Remove(freeResources[i]);
@@ -205,6 +205,61 @@ namespace ProjectsTool.Controllers
             model.ProjectResources = freeResources;
             model.IDProject = IDProject;
             return PartialView(model);
+        }
+
+        public ActionResult AddResourceProject(int IDPerson, int IDProject)
+        {
+            ActiveResourceModel projectResource = new ActiveResourceModel();
+            Person resource = null;
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                resource = db.Person.Where(l => l.IDPerson == IDPerson).FirstOrDefault();
+            }
+            projectResource.ProjectResource = resource.IDPerson;
+            projectResource.IDProject = IDProject;
+
+            return PartialView(projectResource);
+        }
+
+        public ActionResult DoAddResourceProject(ActiveResourceModel data)
+        {
+            List<ActiveProject> activeProject = new List<ActiveProject>();
+            ActiveProject projectToAdd = new ActiveProject();
+            bool flag = false;
+            int percentage = 0;
+
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                activeProject = db.ActiveProject.ToList();
+                foreach(ActiveProject a in activeProject)
+                {
+                    if(data.ProjectResource == a.IDPerson)
+                    {
+                        percentage += a.Percentage;
+                        flag = true;
+                    }
+                    else if(data.ProjectResource != a.IDPerson && flag == false)
+                    {
+                        percentage += a.Percentage;
+                    }
+
+                }
+                if((data.ActiveProject.Percentage + percentage) <= 100)
+                {
+                    projectToAdd.IDPerson = data.ProjectResource;
+                    projectToAdd.IDProject = data.IDProject;
+                    projectToAdd.Percentage = data.ActiveProject.Percentage;
+                    projectToAdd.StartActiveDate = data.ActiveProject.StartActiveDate;
+                    projectToAdd.EndActiveDate = data.ActiveProject.EndActiveDate;
+                    db.ActiveProject.Add(projectToAdd);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    TempData["msg"] = "<script>alert('The percentage is bigger than 100%!');</script>";
+                }
+            }
+                return RedirectToAction("SeeResource");
         }
 
         public ActionResult ModifyForm(int IDProject)
