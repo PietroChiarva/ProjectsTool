@@ -8,6 +8,6 @@ namespace ProjectsTool.Models
     public class ProjectResourceView : ProjectToolsEntities
     {
         public List<Project> projects { get; set; }
-        public int IDPerson { get; set; }
+        public int? IDPerson { get; set; }
     }
 }

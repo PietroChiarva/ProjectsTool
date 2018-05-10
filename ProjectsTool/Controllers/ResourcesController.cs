@@ -86,18 +86,25 @@ namespace ProjectsTool.Controllers
             return PartialView(projects);
         }
 
-        public ActionResult AssegnaProject(int IDPerson)
+        public ActionResult AssegnaProject(int? IDPerson, int? IDProject)
         {
             ProjectResourceView ProjectResource = new ProjectResourceView();
+            List<Project> projects = new List<Project>();
 
+            string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                ProjectResource.projects = db.Project.ToList();
+                var d = db.Person.Where(l => l.EMail == EMail).FirstOrDefault();
+            
+                    //projects = db.Project.Where(m => m.IDPerson == IDPerson).ToList();
+                    ProjectResource.projects = db.Project.Where(m => m.IDPerson == d.IDPerson).ToList();
+                    //ProjectResource.projects = db.Project.ToList();
+              
             }
 
-            ProjectResource.IDPerson = IDPerson;
+       
 
-                return PartialView(ProjectResource);
+            return PartialView(ProjectResource);
         }
     }
 }
