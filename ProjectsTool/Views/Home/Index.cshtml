@@ -11,7 +11,7 @@
 
         tr.header, tr.header1 {
             display: table-row;
-            
+
         }
         tr.header {
             cursor: pointer;
@@ -59,124 +59,107 @@
 </style>
 
 <body>
-<h2>Home Page</h2>
+    <h2>Home Page</h2>
 
-<div class="row">
-    <div class="col-sm-10">
-        <table class="table">
+    <div class="row">
+        <div class="col-sm-10">
 
-            @foreach (var item in Model.Projects)
-            {
-                if (Model.Projects.IndexOf(item) == 0)
-                {
-                    <tr class="header1">
+                <table>
 
-                        <th>
-                            @Html.DisplayNameFor(model => item.ProjectName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => item.StartDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => item.EndDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => item.IsFinish)
-                        </th>
+                    @foreach (var item in Model.Projects)
+                    {
+                        if (Model.Projects.IndexOf(item) == 0)
+                        {
+                            <tr class="header1">
 
-                        <th>
-                            @Html.DisplayNameFor(model => item.ClientName)
-                        </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => item.ProjectName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => item.StartDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => item.EndDate)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => item.IsFinish)
+                                </th>
 
-                        <th>
-                            @Html.DisplayNameFor(model => item.ManagerName)
-                        </th>
-                    </tr>
-                }
-              
-                <tr class="header" onclick="GetResources('@item.IDProject')">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ProjectName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsFinish)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ClientName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ManagerName)
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" onclick="ShowResourceModal ('@item.IDProject')">Add resources</a>
-                        <a class="btn btn-primary" onclick="ShowModifyModal ('@item.IDProject')">Modify</a>
-                        <a class="btn btn-primary" onclick="ShowConcludeModal ('@item.IDProject')">Conclude</a>
-                        <a class="btn btn-primary" onclick="ShowDeleteModal ('@item.IDProject')">Delete</a>
-                    </td>
-                </tr>
-            }
-            @*@{ProjectsTool.Models.ProjectResource projectModel = new ProjectsTool.Models.ProjectResource();
+                                <th>
+                                    @Html.DisplayNameFor(model => item.ClientName)
+                                </th>
 
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => projectModel.Resources.Serial)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => projectModel.Resources.Name)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => projectModel.Resources.Surname)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => projectModel.Resources.Email)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => projectModel.Resources.Percentage)
-                    </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => item.ManagerName)
+                                </th>
+                            </tr>
+                        }
+
+                        <tr class="header">
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProjectName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StartDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EndDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsFinish)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ClientName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ManagerName)
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" onclick="ShowResourceModal ('@item.IDProject')">Add resources</a>
+                                <a class="btn btn-primary" onclick="ShowModifyModal ('@item.IDProject')">Modify</a>
+                                <a class="btn btn-primary" onclick="ShowConcludeModal ('@item.IDProject')">Conclude</a>
+                                <a class="btn btn-primary" onclick="ShowDeleteModal ('@item.IDProject')">Delete</a>
+                            </td>
+                        </tr>
+                    }
+
+                </table>
 
 
-                </tr>
-            }*@
-        </table>
+        </div>
 
 
+
+        <div class="col-sm-2">
+            <div class="card" id="Resource">
+                <div class="card-body text-center">
+                    <h5 class="card-title"></h5>
+                    <a href="@Url.Action("Resources","Resources")" class="button">Resources</a>
+                </div>
+            </div>
+
+
+            <div class="card" id="AddProject">
+                <div class="card-body text-center">
+                    <h5 class="card-title"></h5>
+                    <a class="button" onclick="ShowAddProjectModal()">ADD NEW PROJECT</a>
+                </div>
+            </div>
+
+            <div class="card" id="ClientSection">
+                <div class="card-body text-center">
+                    <h5 class="card-title"></h5>
+                    <a href="@Url.Action("ClientSection","ClientSection")" class="button">Client Section</a>
+                </div>
+            </div>
+
+        </div>
     </div>
-
-
-
-    <div class="col-sm-2">
-        <div class="card" id="Resource">
-            <div class="card-body text-center">
-                <h5 class="card-title"></h5>
-                <a href="@Url.Action("Resources","Resources")" class="button">Resources</a>
-            </div>
-        </div>
-
-
-        <div class="card" id="AddProject">
-            <div class="card-body text-center">
-                <h5 class="card-title"></h5>
-                <a class="button" onclick="ShowAddProjectModal()">ADD NEW PROJECT</a>
-            </div>
-        </div>
-
-        <div class="card" id="ClientSection">
-            <div class="card-body text-center">
-                <h5 class="card-title"></h5>
-                <a href="@Url.Action("ClientSection","ClientSection")" class="button">Client Section</a>
-            </div>
-        </div>
-
-    </div>
-</div>
 </body>
 <script type="text/javascript">
+
+
 
     function ShowResourceModal(IDProject) {
 
@@ -221,7 +204,7 @@
 
 
     var flag = false;
-    function GetResources(IDProject)
+    @*function GetResources(IDProject)
     {
         if (flag == false) {
             $parameters = {};
@@ -252,7 +235,7 @@
         else {
             flag = false;
         }
-    }
+    }*@
     $('tr.header').click(function () {
         $(this).nextUntil('tr.header').css('display', function (i, v) {
             return this.style.display === 'table-row' ? 'none' : 'table-row';
@@ -268,7 +251,7 @@
 
     //}
 
-    
+
     //function ShowViewModal(UserID) {
 
     //    $('#showModal .modal-body').load(Router.action('Manager', 'ViewTask', { UserID: UserID }));

@@ -50,8 +50,11 @@
 <script type="text/javascript">
 
     function ShowPercentageModal(IDPerson, IDProject) {
-
-        $('#showModal2 .modal-body').load(Router.action('Home', 'AddResourceProject', { IDPerson: IDPerson, IDProject: IDProject}));
+        var data = {
+            IDPerson = IDPerson,
+            IDProject = IDProject
+        };
+        $('#showModal2 .modal-body').load(Router.action('Home', 'AddResourceProject', { data: data }));
         $('#showModal2').modal("show");
 
 
