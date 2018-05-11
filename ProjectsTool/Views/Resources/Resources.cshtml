@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<ProjectsTool.Person>
 
+@Html.Raw(TempData["msg"])
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -56,7 +57,7 @@
     <h2>Resources</h2>
 
     <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Firstname of resource" title="Type in a name">
-  
+
 
     <table class="table" id="myTable">
         <tr>
@@ -73,46 +74,46 @@
                 @Html.DisplayNameFor(model => model.EMail)
             </th>
             @*<th>
-                @Html.DisplayNameFor(model => model.Role.Role1)
-            </th>
-            <th></th>*@
+                    @Html.DisplayNameFor(model => model.Role.Role1)
+                </th>
+                <th></th>*@
         </tr>
 
         @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Serial)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Surname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EMail)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.Role.Role1)
-            </td>*@
-            <td>
-                <a class="btn btn-primary" onclick="ShowProjectModal ('@item.IDPerson')">View Project</a>
-                <a class="btn btn-primary" onclick="ShowProjectStoryModal ('@item.IDPerson')">Project Story</a>
-                <a class="btn btn-primary" onclick="ShowAssegnaProjectModal ('@item.IDPerson')">Add Project</a>
-            </td>
-        </tr>
-}
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Serial)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EMail)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Role.Role1)
+                    </td>*@
+                <td>
+                    <a class="btn btn-primary" onclick="ShowProjectModal ('@item.IDPerson')">View Project</a>
+                    <a class="btn btn-primary" onclick="ShowProjectStoryModal ('@item.IDPerson')">Project Story</a>
+                    <a class="btn btn-primary" onclick="ShowAssegnaProjectModal ('@item.IDPerson')">Add Project</a>
+                </td>
+            </tr>
+        }
 
     </table>
 </body>
 
 <script type="text/javascript">
-    
+
 
     function ShowProjectModal(IDPerson) {
 
-        $('#showModal .modal-body').load(Router.action('Resources', 'ResourceProject', { IDPerson: IDPerson}));
+        $('#showModal .modal-body').load(Router.action('Resources', 'ResourceProject', { IDPerson: IDPerson }));
         $('#showModal').modal("show");
 
 
@@ -129,6 +130,7 @@
     function ShowAssegnaProjectModal(IDPerson) {
 
         $('#showModal .modal-body').load(Router.action('Resources', 'AssegnaProject', { IDPerson: IDPerson }));
+        $('#showModalInside').width(1000);
         $('#showModal').modal("show");
 
 

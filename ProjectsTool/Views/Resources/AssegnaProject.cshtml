@@ -1,6 +1,7 @@
 ﻿@model ProjectsTool.Models.ProjectResourceView
 
 
+
 <table class="table">
 
     @foreach (var item in Model.projects)
@@ -9,31 +10,31 @@
 
         {
 
-        <tr>
-            <th>
-                @*ProjectName*@
-                @Html.DisplayNameFor(model => item.ProjectName)
-            </th>
-            <th>
-                @*StartDate*@
-                @Html.DisplayNameFor(model => item.StartDate)
-            </th>
-            <th>
-                @*EndDate*@
-                @Html.DisplayNameFor(model => item.EndDate)
-            </th>
-            <th>
-                @*IsFinish*@
-                @Html.DisplayNameFor(model => item.IsFinish)
-            </th>
-            @*<th>
-                    @Html.DisplayNameFor(model => item.Client.Name)
+            <tr>
+                <th>
+                    @*ProjectName*@
+                    @Html.DisplayNameFor(model => item.ProjectName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => item.Person.Serial)
-                </th>*@
-            <th></th>
-        </tr>
+                    @*StartDate*@
+                    @Html.DisplayNameFor(model => item.StartDate)
+                </th>
+                <th>
+                    @*EndDate*@
+                    @Html.DisplayNameFor(model => item.EndDate)
+                </th>
+                <th>
+                    @*IsFinish*@
+                    @Html.DisplayNameFor(model => item.IsFinish)
+                </th>
+                @*<th>
+                        @Html.DisplayNameFor(model => item.Client.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => item.Person.Serial)
+                    </th>*@
+                <th></th>
+            </tr>
 
         }
 
@@ -57,8 +58,9 @@
                     @Html.DisplayFor(modelItem => item.Person.Serial)
                 </td>*@
             <td>
-                <a class="btn btn-primary" onclick="ShowAddProjectResourceModal ('@item.Person.IDPerson', '@Model.IDProject')">Add Project</a>
+                <a class="btn btn-primary" onclick="ShowAddProjectResourceModal ('@item.Person.IDPerson','@Model.IDProject' )">Add Project</a>
             </td>
+            @*'@Model.IDProject'*@
         </tr>
     }
 
