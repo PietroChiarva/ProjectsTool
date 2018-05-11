@@ -67,7 +67,7 @@ namespace ProjectsTool.Controllers
                 activeProjects = db.ActiveProject.Where(l => l.IDPerson == IDPerson).ToList();
                 foreach (ActiveProject a in activeProjects)
                 {
-                    projects = db.ActiveProject.Include(m => m.Project).Where(l=> l.IDPerson == IDPerson && l.EndActiveDate < DateTime.Now).Select(l => new SingleProjectModel()
+                    projects = db.ActiveProject.Include(m => m.Project).Where(l => l.IDPerson == IDPerson && l.EndActiveDate < DateTime.Now).Select(l => new SingleProjectModel()
                     {
                         ProjectName = l.Project.ProjectName,
                         StartDate = l.Project.StartDate,
@@ -76,7 +76,7 @@ namespace ProjectsTool.Controllers
                         Percentage = l.Percentage,
 
                     }).ToList();
-                    
+
 
 
 
@@ -117,29 +117,30 @@ namespace ProjectsTool.Controllers
                             if (IDPerson == a.IDPerson)
                             {
                                 flag = true;
-
-                                if (flag == false)
-                                {
-
-                                    ProjectResource.projects = db.Project.Where(m => m.IDPerson == d.IDPerson).ToList();
-                                   
-                                }
-
-                                //projects = db.Project.Where(m => m.IDPerson == IDPerson).ToList();
-
-                                //ProjectResource.projects = db.Project.ToList();
                             }
+                            if (flag == false)
+                            {
+
+                                ProjectResource.projects = db.Project.Where(m => m.IDPerson == d.IDPerson).ToList();
+
+                            }
+
+                            //projects = db.Project.Where(m => m.IDPerson == IDPerson).ToList();
+
+                            //ProjectResource.projects = db.Project.ToList();
                         }
                     }
-
-
-
-
                 }
-                return PartialView(ProjectResource);
+
+
+
 
             }
+            return PartialView(ProjectResource);
+
         }
+
+
 
         public ActionResult AddProjectResource(int IDPerson, int IDProject)
         {
@@ -148,22 +149,22 @@ namespace ProjectsTool.Controllers
             Project projects = null;
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-               
-                    activeProject = db.ActiveProject.Where(l => l.IDPerson == l.IDPerson).FirstOrDefault();
-                    if (projectResource.Percentage >= 100)
-                    {
 
-                        TempData["msg"] = "<script>alert('Impossibile to add project at this resource');</script>";
+                activeProject = db.ActiveProject.Where(l => l.IDPerson == l.IDPerson).FirstOrDefault();
+                if (projectResource.Percentage >= 100)
+                {
 
-                    }
-                    else
-                    {
-                        projects = db.Project.Where(l => l.IDPerson == IDPerson).FirstOrDefault();
+                    TempData["msg"] = "<script>alert('Impossibile to add project at this resource');</script>";
 
-                        projectResource.ProjectResource = projects.IDProject;
-                        projectResource.IDPerson = IDPerson;
-                    }
-              
+                }
+                else
+                {
+                    projects = db.Project.Where(l => l.IDPerson == IDPerson).FirstOrDefault();
+
+                    projectResource.ProjectResource = projects.IDProject;
+                    projectResource.IDPerson = IDPerson;
+                }
+
             }
             return PartialView(projectResource);
         }
@@ -208,7 +209,6 @@ namespace ProjectsTool.Controllers
             }
             return RedirectToAction("AssegnaProject");
         }
-
 
     }
 }
