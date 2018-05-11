@@ -144,6 +144,7 @@ namespace ProjectsTool.Controllers
                 {
                     activeFlag = false;
                     projectResources = new ProjectResource();
+                    projectFlag = false;
                     foreach (ActiveProject z in activeProjects)
                     {
                         if(p.IDPerson == z.IDPerson)
@@ -154,10 +155,7 @@ namespace ProjectsTool.Controllers
                         {
                             projectFlag = true;
                         }
-                        else
-                        {
-                            projectFlag = false;
-                        }
+                      
                     }
                     
                     foreach (ActiveProject a in activeProjects)
@@ -216,16 +214,16 @@ namespace ProjectsTool.Controllers
             return PartialView(model);
         }
 
-        public ActionResult AddResourceProject(int IDPerson, int IDProject)
+        public ActionResult AddResourceProject(data data)
         {
             ActiveResourceModel projectResource = new ActiveResourceModel();
             Person resource = null;
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                resource = db.Person.Where(l => l.IDPerson == IDPerson).FirstOrDefault();
+                resource = db.Person.Where(l => l.IDPerson == data.IDPerson).FirstOrDefault();
             }
             projectResource.ProjectResource = resource.IDPerson;
-            projectResource.IDProject = IDProject;
+            projectResource.IDProject = data.IDProject;
 
             return PartialView(projectResource);
         }
@@ -236,7 +234,8 @@ namespace ProjectsTool.Controllers
             ActiveProject projectToAdd = new ActiveProject();
             bool flag = false;
             int percentage = 0;
-            ActiveResourceModel model = new ActiveResourceModel();
+            //ActiveResourceModel model = new ActiveResourceModel();
+            data model = new data();
 
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
@@ -267,12 +266,15 @@ namespace ProjectsTool.Controllers
                 }
                 else
                 {
-                    TempData["msg"] = "<script>alert('The percentage is bigger than 100%!');</script>";
+                    model.IDPerson = data.ProjectResource;
+                    model.IDProject = data.IDProject;
+                    ViewBag.MyErrorMessage = "The percentage is bigger than 100%, insert another percentage!";
+                    return  RedirectToAction("AddResourceProject",model);
                 }
             }
-            model.ProjectResource = data.ProjectResource;
+            model.IDPerson = data.ProjectResource;
             model.IDProject = data.IDProject;
-                return RedirectToAction("SeeResource", model.IDProject);
+            return RedirectToAction("Index");
         }
 
         public ActionResult ModifyForm(int IDProject)
@@ -367,7 +369,8 @@ namespace ProjectsTool.Controllers
                 }
                 else
                 {
-                    TempData["mex"] = "<script>alert('This project is not active, you can't conclude it!');</script>";
+                    ViewBag.MyErrorMessage = "You can't conclude the project because is not active!";
+                    return PartialView();
                 }
             }
 

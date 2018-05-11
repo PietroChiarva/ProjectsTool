@@ -1,0 +1,51 @@
+﻿@model ProjectsTool.Models.ProjectModel
+
+
+<table class="table">
+    @{ProjectsTool.Models.ProjectResource projectModel = new ProjectsTool.Models.ProjectResource();
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => projectModel.Resources.Serial)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => projectModel.Resources.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => projectModel.Resources.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => projectModel.Resources.EMail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => projectModel.Percentage)
+            </th>
+
+            <th></th>
+        </tr>
+        }
+        @foreach (var item in Model.ProjectResources)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Resources.Serial)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Resources.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Resources.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Resources.EMail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Percentage)
+            </td>
+
+            <td>
+                <a class="btn btn-primary" onclick="ShowOutResource ('@item.IDPerson')">X</a>
+            </td>
+        </tr>
+        }
+
+    </table>

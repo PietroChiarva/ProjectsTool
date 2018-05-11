@@ -1,20 +1,22 @@
 ﻿@model ProjectsTool.Project
 
-@Html.Raw(TempData["mex"])
+@if (ViewBag.MyErrorMessage != null)
+{
+    <script> alert(@ViewBag.MyErrorMessage);</script>
+}
+    <h3>Are you sure you want to conclude this project?</h3>
+    <div>
 
-<h3>Are you sure you want to conclude this project?</h3>
-<div>
 
 
+        @using (Html.BeginForm("DoConcludeProject", "Home", null, FormMethod.Post))
+        {
 
-    @using (Html.BeginForm("DoConcludeProject", "Home", null, FormMethod.Post))
-    {
+            @Html.HiddenFor(model => model.IDProject)
 
-        @Html.HiddenFor(model => model.IDProject)
+            <div class="form-actions no-color">
+                <input type="submit" value="Conclude" class="btn btn-default" />
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Conclude" class="btn btn-default" /> 
-
-        </div>
-    }
-</div>
+            </div>
+        }
+    </div>
