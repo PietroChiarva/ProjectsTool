@@ -1,5 +1,5 @@
 ﻿@model ProjectsTool.Models.ActiveProjectModel
-
+@Html.Raw(TempData["msg"])
 
 @*@model ProjectsTool.ActiveProject*@
 
@@ -8,6 +8,8 @@
 {
     @Html.HiddenFor(model => model.ProjectResource)
     @Html.HiddenFor(model => model.IDProject)
+    @Html.HiddenFor(model => model.IDPerson)
+
 
     <div class="form-horizontal">
 

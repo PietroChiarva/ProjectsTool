@@ -86,38 +86,85 @@ namespace ProjectsTool.Controllers
             return PartialView(projects);
         }
 
-        public ActionResult AssegnaProject(int? IDPerson, int? IDProject)
+        public ActionResult AssegnaProject(int IDPerson)
         {
             ProjectResourceView ProjectResource = new ProjectResourceView();
+            ActiveProjectModel projectResource = new ActiveProjectModel();
+            List<ActiveProject> activeProjects = new List<ActiveProject>();
             List<Project> projects = new List<Project>();
+            bool flag = false;
 
             string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
+
                 var d = db.Person.Where(l => l.EMail == EMail).FirstOrDefault();
-            
-                    //projects = db.Project.Where(m => m.IDPerson == IDPerson).ToList();
-                    ProjectResource.projects = db.Project.Where(m => m.IDPerson == d.IDPerson).ToList();
-                    //ProjectResource.projects = db.Project.ToList();
-              
+                activeProjects = db.ActiveProject.ToList();
+                foreach (ActiveProject a in activeProjects)
+                {
+                    if (IDPerson == a.IDPerson)
+                    {
+                        projectResource.Percentage += a.Percentage;
+                        if (projectResource.Percentage >= 100)
+                        {
+                            TempData["msg"] = "<script>alert('Impossibile to add project at this resource because has got more 100% of percentage');</script>";
+                            return RedirectToAction("Resources");
+
+
+                        }
+                        else
+                        {
+                            if (IDPerson == a.IDPerson)
+                            {
+                                flag = true;
+
+                                if (flag == false)
+                                {
+
+                                    ProjectResource.projects = db.Project.Where(m => m.IDPerson == d.IDPerson).ToList();
+                                   
+                                }
+
+                                //projects = db.Project.Where(m => m.IDPerson == IDPerson).ToList();
+
+                                //ProjectResource.projects = db.Project.ToList();
+                            }
+                        }
+                    }
+
+
+
+
+                }
+                return PartialView(ProjectResource);
+
             }
-
-       
-
-            return PartialView(ProjectResource);
         }
 
         public ActionResult AddProjectResource(int IDPerson, int IDProject)
         {
             ActiveProjectModel projectResource = new ActiveProjectModel();
+            ActiveProject activeProject = null;
             Project projects = null;
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                projects = db.Project.Where(l => l.IDPerson == IDPerson).FirstOrDefault();
-            }
-            projectResource.ProjectResource = projects.IDProject;
-            projectResource.IDPerson= IDPerson;
+               
+                    activeProject = db.ActiveProject.Where(l => l.IDPerson == l.IDPerson).FirstOrDefault();
+                    if (projectResource.Percentage >= 100)
+                    {
 
+                        TempData["msg"] = "<script>alert('Impossibile to add project at this resource');</script>";
+
+                    }
+                    else
+                    {
+                        projects = db.Project.Where(l => l.IDPerson == IDPerson).FirstOrDefault();
+
+                        projectResource.ProjectResource = projects.IDProject;
+                        projectResource.IDPerson = IDPerson;
+                    }
+              
+            }
             return PartialView(projectResource);
         }
 
