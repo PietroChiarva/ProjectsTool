@@ -1,11 +1,13 @@
 ﻿@model ProjectsTool.Models.ActiveResourceModel
-@Html.Raw(TempData["msg"])
+
+
 
 @using (Html.BeginForm("DoAddResourceProject", "Home", null, FormMethod.Post))
 {
+    @Html.Raw(TempData["msg"])
 
     @Html.HiddenFor(model => model.ProjectResource)
-    @Html.HiddenFor(model => model.IDPerson)
+    @Html.HiddenFor(model => model.IDProject)
 
     <div class="form-horizontal">
 
