@@ -91,7 +91,7 @@ namespace ProjectsTool.Controllers
             ActiveProjectModel projectResource = new ActiveProjectModel();
             List<ActiveProject> activeProjects = new List<ActiveProject>();
             ProjectModel projectModel = new ProjectModel();
-           
+
             bool flag = false;
 
             string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
@@ -117,7 +117,7 @@ namespace ProjectsTool.Controllers
 
 
                             }
-                            
+
                         }
                         else
                         {
@@ -146,7 +146,7 @@ namespace ProjectsTool.Controllers
                 }
 
             }
-            
+
             return PartialView();
 
         }
@@ -183,46 +183,52 @@ namespace ProjectsTool.Controllers
             return PartialView(projectResource);
         }
 
-        public ActionResult DoAddProjectResource(ActiveResourceModel data)
+        public ActionResult DoAddProjectResource(ActiveProjectModel data, int IDPerson)
         {
+            
             List<ActiveProject> activeProject = new List<ActiveProject>();
             ActiveProject projectToAdd = new ActiveProject();
             bool flag = false;
             int percentage = 0;
+           
+
+
+
 
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
                 activeProject = db.ActiveProject.ToList();
+
                 foreach (ActiveProject a in activeProject)
                 {
-                    if (data.ProjectResource == a.IDPerson)
+                    if (IDPerson == a.IDPerson && a.Percentage != 0)
                     {
                         percentage += a.Percentage;
                         flag = true;
                     }
-                    else if (data.ProjectResource != a.IDPerson && flag == false)
+                    if ((a.Percentage + percentage) <= 100 && percentage > 0)
                     {
-                        percentage += a.Percentage;
+
+                        projectToAdd.IDPerson = data.IDPerson;
+                        projectToAdd.IDProject = data.IDProject;
+                        projectToAdd.Percentage = data.ActiveProject.Percentage;
+                        projectToAdd.StartActiveDate = data.ActiveProject.StartActiveDate;
+                        projectToAdd.EndActiveDate = data.ActiveProject.EndActiveDate;
+                      
+                        db.ActiveProject.Add(projectToAdd);
+                        db.SaveChanges();
                     }
 
+                    else
+                    {
+                        TempData["msg"] = "<script>alert('The percentage is bigger than 100%!');</script>";
+                    }
+                    
+                   
                 }
-                if ((data.ActiveProject.Percentage + percentage) <= 100)
-                {
-                    projectToAdd.IDPerson = data.ProjectResource;
-                    projectToAdd.IDProject = data.IDProject;
-                    projectToAdd.Percentage = data.ActiveProject.Percentage;
-                    projectToAdd.StartActiveDate = data.ActiveProject.StartActiveDate;
-                    projectToAdd.EndActiveDate = data.ActiveProject.EndActiveDate;
-                    db.ActiveProject.Add(projectToAdd);
-                    db.SaveChanges();
-                }
-                else
-                {
-                    TempData["msg"] = "<script>alert('The percentage is bigger than 100%!');</script>";
-                }
+                return RedirectToAction("AssegnaProject");
             }
-            return RedirectToAction("AssegnaProject");
         }
-
     }
 }
+
