@@ -9,11 +9,11 @@ namespace ProjectsTool.Models
     {
       
         public Person Resources { get; set; }
-        public Project projects { get; set; }
+        public List<Project> projects { get; set; }
         public int Percentage { get; set; }
         public int IDProject { get; set; }
         public int? IDPerson { get; set; }
-        public List<ProjectResource> ProjectResources { get; set; }
+        //public List<ProjectResource> ProjectResources { get; set; }
 
    
 

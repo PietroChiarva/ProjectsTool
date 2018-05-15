@@ -917,6 +917,7 @@
     <Content Include="Views\Resources\AssegnaProject.cshtml" />
     <Content Include="Views\Resources\AddProjectResource.cshtml" />
     <Content Include="Views\Home\GetResources.cshtml" />
+    <Content Include="Views\Resources\NonAssegnabile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
