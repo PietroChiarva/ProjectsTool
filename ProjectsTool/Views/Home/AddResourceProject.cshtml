@@ -1,53 +1,90 @@
 ﻿@model ProjectsTool.Models.ActiveResourceModel
 
 
-@using (Html.BeginForm("DoAddResourceProject", "Home", null, FormMethod.Post))
-{
 
 
-    @Html.HiddenFor(model => model.ProjectResource)
-    @Html.HiddenFor(model => model.IDProject)
 
-    <div class="form-horizontal">
+@Html.HiddenFor(model => model.ProjectResource)
+@Html.HiddenFor(model => model.IDProject)
+@Html.Hidden("RedirectToAddResource", Url.Action("AddResourceProject", "Home", new { Model.ProjectResource, Model.IDProject }))
+@Html.Hidden("RedirectToSeeResource", Url.Action("SeeResource", "Home", new { Model.IDProject}))
 
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="form-horizontal">
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ActiveProject.Percentage, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ActiveProject.Percentage, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ActiveProject.Percentage, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ActiveProject.StartActiveDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ActiveProject.StartActiveDate, new { htmlAttributes = new { type = "date", @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ActiveProject.StartActiveDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ActiveProject.EndActiveDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ActiveProject.EndActiveDate, new { htmlAttributes = new { type = "date", @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ActiveProject.EndActiveDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Add" class="btn btn-default" />
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ActiveProject.Percentage, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ActiveProject.Percentage, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ActiveProject.Percentage, "", new { @class = "text-danger" })
         </div>
     </div>
-    if (ViewBag.MyErrorMessage != null)
-    {
-        <script> alert(@ViewBag.MyErrorMessage);</script>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ActiveProject.StartActiveDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ActiveProject.StartActiveDate, new { htmlAttributes = new { type = "date", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ActiveProject.StartActiveDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ActiveProject.EndActiveDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ActiveProject.EndActiveDate, new { htmlAttributes = new { type = "date", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ActiveProject.EndActiveDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Add" onclick="doAddResourceProject('@Model.ProjectResource','@Model.IDProject')" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+
+<script>
+    function doAddResourceProject(ProjectResource, IDProject) {
+       
+        var data = {
+            ProjectResource: ProjectResource,
+            ActiveProject: {
+                Percentage: $("#ActiveProject_Percentage").val(),
+                StartActiveDate: $("#ActiveProject_StartActiveDate").val(),
+                EndActiveDate: $("#ActiveProject_EndActiveDate").val()
+            },
+            IDProject: IDProject
+        };
+        var urlForAddProject = $("#RedirectToAddResource").val();
+        var urlForSeeResource = $("#RedirectToSeeResource").val();
+        $.ajax({
+                //imposto il tipo di invio dati (GET O POST)
+                type: "POST",
+                //Dove devo inviare i dati recuperati dal form?
+                url: "@Url.Action("DoAddResourceProject", "Home")",
+                //Quali dati devo inviare? e che tipo
+                data: data,
+            success: function (data) {
+                debugger;
+                    if (data.flag == true) {
+                        alert(data.messaggio);
+                        window.location.href = "@Url.Action("AddResourceProject", "Home", new { Model.ProjectResource, Model.IDProject })";
+                    }
+                    else {
+                        alert(data.messaggio)
+                        window.location.href = "@Url.Action("SeeResource", "Home", new { Model.IDProject })";
+                    }
+                },
+                error: function () {
+                    alert("Chiamata fallita, riprova");
+                    //sempre meglio impostare una callback in caso di fallimento
+                }
+
+            });
     }
-}
+</script>
 
 
 

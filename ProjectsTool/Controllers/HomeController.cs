@@ -214,16 +214,17 @@ namespace ProjectsTool.Controllers
             return PartialView(model);
         }
 
-        public ActionResult AddResourceProject(data data)
+        public ActionResult AddResourceProject(int IDPerson, int IDProject)
         {
             ActiveResourceModel projectResource = new ActiveResourceModel();
             Person resource = null;
+          
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                resource = db.Person.Where(l => l.IDPerson == data.IDPerson).FirstOrDefault();
+                resource = db.Person.Where(l => l.IDPerson == IDPerson).FirstOrDefault();
             }
             projectResource.ProjectResource = resource.IDPerson;
-            projectResource.IDProject = data.IDProject;
+            projectResource.IDProject = IDProject;
 
             return PartialView(projectResource);
         }
@@ -235,7 +236,7 @@ namespace ProjectsTool.Controllers
             bool flag = false;
             int percentage = 0;
             //ActiveResourceModel model = new ActiveResourceModel();
-            data model = new data();
+           
 
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
@@ -244,8 +245,8 @@ namespace ProjectsTool.Controllers
                 {
                     if(data.ProjectResource == a.IDPerson)
                     {
-                        percentage += data.ActiveProject.Percentage;
-                        flag = true;
+                        percentage += a.Percentage;
+                        
                     }
                     else if(data.ProjectResource != a.IDPerson && flag == false)
                     {
@@ -254,7 +255,7 @@ namespace ProjectsTool.Controllers
                     }
 
                 }
-                if((data.ActiveProject.Percentage + percentage) <= 100 && (data.ActiveProject.Percentage + percentage) > 0)
+                if(percentage <= 100 &&  percentage > 0)
                 {
                     projectToAdd.IDPerson = data.ProjectResource;
                     projectToAdd.IDProject = data.IDProject;
@@ -266,15 +267,20 @@ namespace ProjectsTool.Controllers
                 }
                 else
                 {
-                    model.IDPerson = data.ProjectResource;
-                    model.IDProject = data.IDProject;
-                    ViewBag.MyErrorMessage = "The percentage is bigger than 100%, insert another percentage!";
-                    return  RedirectToAction("AddResourceProject",model);
+                    return Json(new { messaggio = $"The percentage is bigger than 100% or is less than 0%, insert another percentage!"
+                        , flag = true ,
+                        JsonRequestBehavior.AllowGet
+                    });
                 }
             }
-            model.IDPerson = data.ProjectResource;
-            model.IDProject = data.IDProject;
-            return RedirectToAction("Index");
+
+            return Json(new
+            {
+                messaggio = $"The resource is now active in this project with a {projectToAdd.Percentage}%"
+                        ,
+                flag = false,
+                JsonRequestBehavior.AllowGet
+            });
         }
 
         public ActionResult ModifyForm(int IDProject)
