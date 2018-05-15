@@ -90,7 +90,8 @@ namespace ProjectsTool.Controllers
             ProjectResourceView ProjectResource = new ProjectResourceView();
             ActiveProjectModel projectResource = new ActiveProjectModel();
             List<ActiveProject> activeProjects = new List<ActiveProject>();
-            List<Project> projects = new List<Project>();
+            ProjectModel projectModel = new ProjectModel();
+           
             bool flag = false;
 
             string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
@@ -101,45 +102,59 @@ namespace ProjectsTool.Controllers
                 activeProjects = db.ActiveProject.ToList();
                 foreach (ActiveProject a in activeProjects)
                 {
+                    flag = false;
                     if (IDPerson == a.IDPerson)
                     {
                         projectResource.Percentage += a.Percentage;
-                        if (projectResource.Percentage >= 100)
+                        if (projectResource.Percentage < 100)
                         {
-                            TempData["msg"] = "<script>alert('Impossibile to add project at this resource because has got more 100% of percentage');</script>";
-                            return RedirectToAction("Resources");
-
-
-                        }
-                        else
-                        {
-                            if (IDPerson == a.IDPerson)
-                            {
-                                flag = true;
-                            }
                             if (flag == false)
                             {
 
                                 ProjectResource.projects = db.Project.Where(m => m.IDPerson == d.IDPerson).ToList();
 
+                                return PartialView(ProjectResource);
+
+
                             }
-
-                            //projects = db.Project.Where(m => m.IDPerson == IDPerson).ToList();
-
-                            //ProjectResource.projects = db.Project.ToList();
+                            
                         }
+                        else
+                        {
+                            //TempData["msg"] = "<script>alert('Impossibile to add project at this resource because has got more 100% of percentage');</script>";
+                            return RedirectToAction("NonAssegnabile");
+
+                        }
+                        //else
+                        //{
+                        //    if (IDPerson == a.IDPerson)
+                        //    {
+                        //        flag = true;
+                        //    }
+                        //    if (flag == false)
+                        //    {
+
+                        //        ProjectResource.projects = db.Project.Where(m => m.IDPerson == d.IDPerson).ToList();
+
+                        //    }
+
+                        //projects = db.Project.Where(m => m.IDPerson == IDPerson).ToList();
+
+                        //ProjectResource.projects = db.Project.ToList();
+
                     }
                 }
 
-
-
-
             }
-            return PartialView(ProjectResource);
+            
+            return PartialView();
 
         }
 
-
+        public ActionResult NonAssegnabile()
+        {
+            return PartialView();
+        }
 
         public ActionResult AddProjectResource(int IDPerson, int IDProject)
         {
