@@ -6,8 +6,7 @@
 
 @Html.HiddenFor(model => model.ProjectResource)
 @Html.HiddenFor(model => model.IDProject)
-@Html.Hidden("RedirectToAddResource", Url.Action("AddResourceProject", "Home", new { Model.ProjectResource, Model.IDProject }))
-@Html.Hidden("RedirectToSeeResource", Url.Action("SeeResource", "Home", new { Model.IDProject}))
+
 
 <div class="form-horizontal">
 
@@ -40,14 +39,14 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Add" onclick="doAddResourceProject('@Model.ProjectResource','@Model.IDProject')" class="btn btn-default" />
+            <a class ="btn btn-default"  onclick="doAddResourceProject('@Model.ProjectResource','@Model.IDProject')">Add</a>
         </div>
     </div>
 </div>
 
 <script>
     function doAddResourceProject(ProjectResource, IDProject) {
-       
+        debugger;
         var data = {
             ProjectResource: ProjectResource,
             ActiveProject: {
@@ -57,8 +56,7 @@
             },
             IDProject: IDProject
         };
-        var urlForAddProject = $("#RedirectToAddResource").val();
-        var urlForSeeResource = $("#RedirectToSeeResource").val();
+
         $.ajax({
                 //imposto il tipo di invio dati (GET O POST)
                 type: "POST",
@@ -67,14 +65,20 @@
                 //Quali dati devo inviare? e che tipo
                 data: data,
             success: function (data) {
-                debugger;
-                    if (data.flag == true) {
-                        alert(data.messaggio);
-                        window.location.href = "@Url.Action("AddResourceProject", "Home", new { Model.ProjectResource, Model.IDProject })";
+                
+                if (data.flag == true) {
+
+                    alert(data.messaggio);
+                    $('#showModal2 .modal-body').load(Router.action('Home', 'AddResourceProject', { IDPerson: ProjectResource, IDProject: IDProject }));
                     }
                     else {
-                        alert(data.messaggio)
-                        window.location.href = "@Url.Action("SeeResource", "Home", new { Model.IDProject })";
+                        
+                    alert(data.messaggio);
+                    $("#showModal2").modal('hide');
+
+                    $('#showModal .modal-body').load(Router.action('Home', 'SeeResource', { IDProject: IDProject }));
+
+                       
                     }
                 },
                 error: function () {

@@ -132,7 +132,8 @@ namespace ProjectsTool.Controllers
             bool flag = false;
             bool activeFlag = false;
             bool projectFlag = false;
-
+            bool alreadyActive = false;
+            int num = 0;
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
                 resources = db.Person.Where(l => l.IDRole == 0).ToList();
@@ -145,6 +146,9 @@ namespace ProjectsTool.Controllers
                     activeFlag = false;
                     projectResources = new ProjectResource();
                     projectFlag = false;
+                    alreadyActive = false;
+                    flag = false;
+                    
                     foreach (ActiveProject z in activeProjects)
                     {
                         if(p.IDPerson == z.IDPerson)
@@ -153,6 +157,7 @@ namespace ProjectsTool.Controllers
                         }
                         if(z.IDProject == IDProject && p.IDPerson == z.IDPerson)
                         {
+                            
                             projectFlag = true;
                         }
                       
@@ -160,9 +165,9 @@ namespace ProjectsTool.Controllers
                     
                     foreach (ActiveProject a in activeProjects)
                     {
-                        foreach (int i in arrayResource)
+                        for(int i = 0; i< arrayResource.Count; i++)
                         {
-                            if (p.IDPerson == i && a.IDPerson == p.IDPerson)
+                            if (p.IDPerson == arrayResource[i] && a.IDPerson == p.IDPerson)
                             {
                                 if ((a.Percentage + resourcesPercentage[i]) == 100)
                                 {
@@ -175,7 +180,8 @@ namespace ProjectsTool.Controllers
                                 }
                             }
                         }
-                        if (p.IDPerson == a.IDPerson && flag == false && projectFlag ==false)
+                        
+                        if (p.IDPerson == a.IDPerson && flag == false && projectFlag ==false && alreadyActive == false)
                         {
                             projectResources.Percentage = a.Percentage;
                             if (projectResources.Percentage < 100)
@@ -183,9 +189,14 @@ namespace ProjectsTool.Controllers
                                 projectResources.Resources = p;
                                 projectResources.Percentage = a.Percentage;
                                 activeFlag = true;
+                                alreadyActive = true;
                                 resourcesPercentage.Add(projectResources.Percentage);
                                 arrayResource.Add(projectResources.Resources.IDPerson);
                                 freeResources.Add(projectResources);
+                                
+                                
+                                
+                            
                             }
                         }
                         else if (p.IDPerson != a.IDPerson && activeFlag == false && projectFlag == false)
@@ -195,6 +206,8 @@ namespace ProjectsTool.Controllers
                             resourcesPercentage.Add(projectResources.Percentage);
                             arrayResource.Add(projectResources.Resources.IDPerson);
                             freeResources.Add(projectResources);
+                           
+                           
                             activeFlag = true;
 
                         }
@@ -203,6 +216,7 @@ namespace ProjectsTool.Controllers
                         
                            
                         }
+                    num++;
                         
                     }
                 }
@@ -213,7 +227,7 @@ namespace ProjectsTool.Controllers
             model.IDProject = IDProject;
             return PartialView(model);
         }
-
+        
         public ActionResult AddResourceProject(int IDPerson, int IDProject)
         {
             ActiveResourceModel projectResource = new ActiveResourceModel();

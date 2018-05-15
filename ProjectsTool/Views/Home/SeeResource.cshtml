@@ -1,6 +1,16 @@
 ﻿@model ProjectsTool.Models.AddResourceModel
 
-
+@if (Model.ProjectResources == null)
+{
+    <script>
+        
+        window.onload = function () {
+            alert("There aren't any free resource for this project");
+        };
+    </script>
+}
+else
+{
 <table class="table">
     <tr>
         <th>
@@ -15,13 +25,14 @@
         <th>
            E-Mail
         </th>
-        <th>
+        @*<th>
             Percentage
-        </th>
+        </th>*@
         <th></th>
     </tr>
 
-@foreach (var item in Model.ProjectResources) {
+@foreach (var item in Model.ProjectResources)
+{
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Resources.Serial)
@@ -35,9 +46,9 @@
         <td>
             @Html.DisplayFor(modelItem => item.Resources.EMail)
         </td>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.Percentage) %
-        </td>
+        </td>*@
         <td>
             <a class="btn btn-primary" onclick="ShowPercentageModal ('@item.Resources.IDPerson', '@Model.IDProject')">Add</a>
         </td>
@@ -46,11 +57,11 @@
 }
 
 </table>
-
+}
 <script type="text/javascript">
 
     function ShowPercentageModal(IDPerson, IDProject) {
-        
+
 
         $('#showModal2 .modal-body').load(Router.action('Home', 'AddResourceProject', { IDPerson: IDPerson, IDProject: IDProject }));
         $('#showModalInside2').width(700);
