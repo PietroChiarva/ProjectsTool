@@ -18,5 +18,6 @@ namespace ProjectsTool.Models
         public string ManagerName { get; set; }
         public int IDProject { get; set; }
         public int Percentage { get; set; }
+        public bool IsYourManager { get; set; }
     }
 }

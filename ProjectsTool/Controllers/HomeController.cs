@@ -11,11 +11,67 @@ namespace ProjectsTool.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public ActionResult CheckDateProjects(int IDManager)
+        {
+            Project projects = null;
+
+
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                projects = db.Project.Where(l => l.IDPerson == IDManager && DateTime.Now >= l.EndDate).FirstOrDefault();
+            }
+                if(projects != null)
+                {
+                    return Json(new { flag = true , IDManager}, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                return Json(new { flag = false }, JsonRequestBehavior.AllowGet);
+                }
+                
+        }
+        public ActionResult DateProjectsModal(int IDManager)
+        {
+            Project project = null;
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                project = db.Project.Where(l => l.IDPerson == IDManager && DateTime.Now >= l.EndDate).FirstOrDefault();
+            }
+
+            return PartialView(project);
+        }
+
+        public ActionResult AJAXConcludeProject(int IDProject)
+        {
+            List<ActiveProject> activeProjects = new List<ActiveProject>();
+            Project project = null;
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
+                activeProjects = db.ActiveProject.Where(l => l.IDProject == IDProject).ToList();
+
+                project.IsFinish = true;
+                project.EndDate = DateTime.Now;
+                foreach (ActiveProject a in activeProjects)
+                {
+                    a.EndActiveDate = DateTime.Now;
+
+                }
+            }
+            return Json(new { messaggio = "The project is concluded" });
+        }
+
+        //public ActionResult PostponeProject(int IDProject)
+        //{
+
+        //}
+
+        public ActionResult Index(bool? onlyManager)
         {
             //int IDPerson = 0;
             //int IDRole = 1;
             string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
+            int IDManager = 0;
             ProjectModel projectModel = new ProjectModel();
             List<SingleProjectModel> Projects = new List<SingleProjectModel>();
             List<ProjectResource> resources = new List<ProjectResource>();
@@ -28,15 +84,14 @@ namespace ProjectsTool.Controllers
 
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                //var d = db.Person.Where(l => l.EMail == EMail).FirstOrDefault();
-                //if (d != null)
-                //{
-                //    Session["IDPerson"] = d.IDPerson;
-                //    IDRole = d.IDRole;
-                //    IDPerson = d.IDPerson;
-                //}
+                var d = db.Person.Where(l => l.EMail == EMail).FirstOrDefault();
+                if (d != null)
+                {
+                    IDManager = d.IDPerson;
 
-                    projects = db.Project.ToList();
+                }
+
+                projects = db.Project.ToList();
                 foreach (Project a in projects)
                 {
                     ClientName = db.Client.Where(l => l.IDClient == a.IDClient).FirstOrDefault();
@@ -52,6 +107,14 @@ namespace ProjectsTool.Controllers
                         IDProject = l.IDProject,
 
                     }).ToList();
+                    if(IDManager == a.IDPerson)
+                    {
+                        Projects[0].IsYourManager = true;
+                    }
+                    else
+                    {
+                        Projects[0].IsYourManager = false;
+                    }
                     Proj.Add(Projects[0]);
                 }
                 activeProjects = db.ActiveProject.ToList();
@@ -90,6 +153,7 @@ namespace ProjectsTool.Controllers
                 
 
             projectModel.Projects = Proj;
+            projectModel.IDManager = IDManager;
             //projectModel.ProjectResources = resources;
                 return View(projectModel);
         }
