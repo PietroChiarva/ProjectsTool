@@ -13,9 +13,6 @@ namespace ProjectsTool.Models
         public int IDProject { get; set; }
         public int IDPerson { get; set; }
         public int Percentage { get; set; }
-        [DisplayFormat(DataFormatString = "{0:d}")]
-        public DateTime? StartActiveDate { get; set; }
-        [DisplayFormat(DataFormatString = "{0:d}")]
-        public DateTime? EndActiveDate { get; set; }
+        
     }
 }
