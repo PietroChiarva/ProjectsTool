@@ -91,6 +91,11 @@ namespace ProjectsTool.Controllers
             ActiveProjectModel projectResource = new ActiveProjectModel();
             List<ActiveProject> activeProjects = new List<ActiveProject>();
             ProjectModel projectModel = new ProjectModel();
+            ProjectResource projectAttive = new ProjectResource();
+            List<Project> projects = new List<Project>();
+            List<ActiveProject> ProgettiActivi = new List<ActiveProject>();
+
+        
 
             bool flag = false;
 
@@ -100,50 +105,46 @@ namespace ProjectsTool.Controllers
 
                 var d = db.Person.Where(l => l.EMail == EMail).FirstOrDefault();
                 activeProjects = db.ActiveProject.ToList();
-                foreach (ActiveProject a in activeProjects)
-                {
-                    flag = false;
-                    if (IDPerson == a.IDPerson)
+
+            
+
+                
+
+                    foreach (ActiveProject a in activeProjects)
                     {
-                        projectResource.Percentage += a.Percentage;
-                        if (projectResource.Percentage < 100)
+                        flag = false;
+                        if (IDPerson == a.IDPerson)
                         {
-                            if (flag == false)
+                           
+                                projectResource.Percentage += a.Percentage;
+                            if (projectResource.Percentage < 100)
                             {
+
+
+                                if (flag == false)
+                                {
+
 
                                 ProjectResource.projects = db.Project.Where(m => m.IDPerson == d.IDPerson).ToList();
 
-                                return PartialView(ProjectResource);
-
+                                ProjectResource.IDPerson = IDPerson;
 
                             }
+                           
 
                         }
+                        return PartialView(ProjectResource);
+                    }
+                                                       
                         else
                         {
                             //TempData["msg"] = "<script>alert('Impossibile to add project at this resource because has got more 100% of percentage');</script>";
                             return RedirectToAction("NonAssegnabile");
 
                         }
-                        //else
-                        //{
-                        //    if (IDPerson == a.IDPerson)
-                        //    {
-                        //        flag = true;
-                        //    }
-                        //    if (flag == false)
-                        //    {
 
-                        //        ProjectResource.projects = db.Project.Where(m => m.IDPerson == d.IDPerson).ToList();
 
-                        //    }
-
-                        //projects = db.Project.Where(m => m.IDPerson == IDPerson).ToList();
-
-                        //ProjectResource.projects = db.Project.ToList();
-
-                    }
-                }
+                    }     
 
             }
 
@@ -175,7 +176,7 @@ namespace ProjectsTool.Controllers
                 {
                     projects = db.Project.Where(l => l.IDPerson == IDPerson).FirstOrDefault();
 
-                    projectResource.ProjectResource = projects.IDProject;
+                    projectResource.ProjectResource = IDProject;
                     projectResource.IDPerson = IDPerson;
                 }
 
@@ -183,7 +184,7 @@ namespace ProjectsTool.Controllers
             return PartialView(projectResource);
         }
 
-        public ActionResult DoAddProjectResource(ActiveProjectModel data, int IDPerson)
+        public ActionResult DoAddProjectResource(ActiveProjectModel data)
         {
             
             List<ActiveProject> activeProject = new List<ActiveProject>();
@@ -191,23 +192,27 @@ namespace ProjectsTool.Controllers
             bool flag = false;
             int percentage = 0;
            
-
-
-
-
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
                 activeProject = db.ActiveProject.ToList();
 
                 foreach (ActiveProject a in activeProject)
                 {
-                    if (IDPerson == a.IDPerson && a.Percentage != 0)
+                    if (data.IDPerson == a.IDPerson && a.Percentage != 0)
                     {
                         percentage += a.Percentage;
+
+                    }
+                    else if (data.IDPerson != a.IDPerson && flag == false)
+                    {
+                        percentage += data.ActiveProject.Percentage;
                         flag = true;
                     }
-                    if ((a.Percentage + percentage) <= 100 && percentage > 0)
+                }
+                    if (percentage <= 100 && percentage > 0)
                     {
+
+                        data.IDProject = data.ProjectResource;
 
                         projectToAdd.IDPerson = data.IDPerson;
                         projectToAdd.IDProject = data.IDProject;
@@ -221,14 +226,24 @@ namespace ProjectsTool.Controllers
 
                     else
                     {
-                        TempData["msg"] = "<script>alert('The percentage is bigger than 100%!');</script>";
-                    }
-                    
-                   
-                }
-                return RedirectToAction("AssegnaProject");
-            }
+                    return Json(new
+                    {
+                        messaggio = $"The percentage is bigger than 100% or is less than 0%, insert another percentage!"
+                        , flag = true,
+                        JsonRequestBehavior.AllowGet
+                    });
+                }   
+              }
+            return Json(new
+            {
+                messaggio = $"The resource is now active in this project with a {projectToAdd.Percentage}%"
+                    ,
+                flag = false,
+                JsonRequestBehavior.AllowGet
+            });
         }
+        
     }
+
 }
 

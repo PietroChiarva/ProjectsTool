@@ -1,29 +1,28 @@
 ﻿@model ProjectsTool.Models.ActiveProjectModel
 
 @*@model ProjectsTool.ActiveProject*@
-@Html.Raw(TempData["msg"])
 
 
 
-@using (Html.BeginForm("DoAddProjectResource", "Resources", null, FormMethod.Post))
-{
+
+
+
     @Html.HiddenFor(model => model.ProjectResource)
-    @Html.HiddenFor(model => model.IDProject)
     @Html.HiddenFor(model => model.IDPerson)
 
 
     <div class="form-horizontal">
 
-        <h4>ActiveProject</h4>
-        <hr />
+        <h4>ADD Active Project</h4>
+      
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Percentage, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ActiveProject.Percentage, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Percentage, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Percentage, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.ActiveProject.Percentage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ActiveProject.Percentage, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -45,8 +44,55 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <a class="btn btn-default" onclick="doAddProjectResource('@Model.ProjectResource','@Model.IDPerson', )">Add</a>
             </div>
         </div>
     </div>
-}
+
+
+
+<script>
+    function doAddProjectResource(ProjectResource, IDPerson) {
+        debugger;
+        var data = {
+            ProjectResource: ProjectResource,
+            ActiveProject: {
+                Percentage: $("#ActiveProject_Percentage").val(),
+                StartActiveDate: $("#ActiveProject_StartActiveDate").val(),
+                EndActiveDate: $("#ActiveProject_EndActiveDate").val()
+            },
+            IDPerson: IDPerson
+        }
+
+        $.ajax({
+                //imposto il tipo di invio dati (GET O POST)
+                type: "POST",
+                //Dove devo inviare i dati recuperati dal form?
+                url: "@Url.Action("DoAddProjectResource", "Resources")",
+                //Quali dati devo inviare? e che tipo
+                data: data,
+            success: function (data) {
+
+                if (data.flag == true) {
+
+                    alert(data.messaggio);
+                    $('#showModal2 .modal-body').load(Router.action('Resources', 'AddProjectResource', { IDProject: ProjectResource, IDPerson: IDPerson }));
+                    }
+                    else {
+
+                    alert(data.messaggio);
+                    $("#showModal2").modal('hide');
+
+                    //$('#showModal .modal-body').load(Router.action('Home', 'SeeResource', { IDProject: IDProject }));
+
+
+                    }
+                },
+                error: function () {
+                    alert("Chiamata fallita, riprova");
+                    //sempre meglio impostare una callback in caso di fallimento
+                }
+
+            });
+    }
+</script>
