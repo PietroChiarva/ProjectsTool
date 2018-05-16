@@ -1,0 +1,52 @@
+﻿@model ProjectsTool.Project
+
+<h3>There is a project that needs to be concluded</h3>
+<div>
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProjectName)
+        </dd>
+
+    </dl>
+
+    <div class="form-actions no-color">
+        <a class="btn btn-default" onclick="DoConcludeProject ('@Model.IDProject')">Conclude</a>
+        <a class="btn btn-default" onclick="PostponeProject ('@Model.IDProject')">Postpone</a>
+
+    </div>
+
+</div>
+
+<script>
+    function DoConcludeProject(IDProject) {
+        var data = {
+            IDProject = IDProject
+        };
+         $.ajax({
+                //imposto il tipo di invio dati (GET O POST)
+                type: "POST",
+                //Dove devo inviare i dati recuperati dal form?
+                url: "@Url.Action("AJAXConcludeProject", "Home")",
+             //Quali dati devo inviare? e che tipo
+                 data: data,
+             success: function (data) {
+                 alert(data.messaggio);
+                 $('#showModal').hide();;
+                   
+                },
+                error: function () {
+                    
+                }
+
+            });
+    }
+
+    function PostponeProject(IDProject) {
+        $('#showModal2 .modal-body').load(Router.action('Home', 'PostponeProject', {  IDProject: IDProject }));
+        $('#showModal2').modal('show');
+    }
+</script>
