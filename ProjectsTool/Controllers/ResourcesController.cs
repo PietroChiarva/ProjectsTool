@@ -33,7 +33,7 @@ namespace ProjectsTool.Controllers
                 activeProjects = db.ActiveProject.Where(l => l.IDPerson == IDPerson).ToList();
                 foreach (ActiveProject a in activeProjects)
                 {
-                    projects = db.ActiveProject.Include(m => m.Project).Where(l => l.IDProject == a.IDProject).Select(l => new SingleProjectModel()
+                    projects = db.ActiveProject.Include(m => m.Project).Where(l => l.IDProject == a.IDProject && l.IDPerson == a.IDPerson).Select(l => new SingleProjectModel()
                     {
                         ProjectName = l.Project.ProjectName,
                         StartDate = l.Project.StartDate,
