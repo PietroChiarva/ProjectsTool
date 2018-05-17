@@ -421,11 +421,11 @@ namespace ProjectsTool.Controllers
                     project.StartDate = StartDate;
                     project.EndDate = EndDate;
                     db.SaveChanges();
-                    return Json(new { flag = true, messaggio = "Project modified with success" });
+                    return Json(new { flag = true, messaggio = "Project modified with success" }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    return Json(new { flag = false, messaggio = "The entered data are not correct" });
+                    return Json(new { flag = false, messaggio = "The entered data are not correct" }, JsonRequestBehavior.AllowGet);
                 }
             }
 
@@ -481,8 +481,8 @@ namespace ProjectsTool.Controllers
             {
                 project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
                 activeProjects = db.ActiveProject.Where(l => l.IDProject == IDProject).ToList();
-                if(activeProjects.Count != 0)
-                {
+                //if(activeProjects.Count != 0)
+                //{
                     project.IsFinish = true;
                     project.EndDate = DateTime.Now;
                     foreach(ActiveProject a in activeProjects)
@@ -490,15 +490,16 @@ namespace ProjectsTool.Controllers
                         a.EndActiveDate = DateTime.Now;
                        
                     }
-                }
-                else
-                {
-                    ViewBag.MyErrorMessage = "You can't conclude the project because is not active!";
-                    return PartialView();
-                }
+                    db.SaveChanges();
+                    return Json(new { flag = true, messaggio = "Project concluded with success" }, JsonRequestBehavior.AllowGet);
+                //}
+                //else
+                //{
+                //    return Json(new { flag = false, messaggio = "You can't conclude this project because is not active" },JsonRequestBehavior.AllowGet);
+                //}
             }
 
-                return RedirectToAction("Index");
+
         }
 
         public ActionResult AddProject()
@@ -535,11 +536,11 @@ namespace ProjectsTool.Controllers
                 
             
         }
-            return Json(new { messaggio = $"Project{data.IDProject} add with success", flag = true });
+            return Json(new { messaggio = $"Project{data.IDProject} add with success", flag = true }, JsonRequestBehavior.AllowGet);
 
         }else
             {
-                return Json(new { messaggio = $"Dati mancanti o non validi", flag = false });
+                return Json(new { messaggio = $"Dati mancanti o non validi", flag = false }, JsonRequestBehavior.AllowGet);
             }
         }
         
