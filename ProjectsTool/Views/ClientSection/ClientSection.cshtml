@@ -198,19 +198,19 @@
                 td = tr[i].getElementsByTagName("td")[0];
             }
             else if (filterOption == "Name") {
-                td = tr[i].getElementsByTagName("td")[1];
+                td = tr[i].getElementsByTagName("td")[0];
             }
             else if (filterOption == "Society") {
-                td = tr[i].getElementsByTagName("td")[2];
+                td = tr[i].getElementsByTagName("td")[1];
             }
             else if (filterOption == "NumberPhone") {
-                td = tr[i].getElementsByTagName("td")[3];
+                td = tr[i].getElementsByTagName("td")[2];
             }
             else if (filterOption == "Email") {
-                td = tr[i].getElementsByTagName("td")[4];
+                td = tr[i].getElementsByTagName("td")[3];
             }
             else if (filterOption == "PartitaIva") {
-                td = tr[i].getElementsByTagName("td")[5];
+                td = tr[i].getElementsByTagName("td")[4];
             }
             if (td) {
                 if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
