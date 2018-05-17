@@ -3,10 +3,12 @@
 @Html.Raw(TempData["msg"])
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/lib/bootstrap.min.css">
-    <script src="/lib/jquery-1.12.2.min.js"></script>
-    <script src="/lib/bootstrap.min.js"></script>
+    @*<meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/lib/bootstrap.min.css">
+        <script src="/lib/jquery-1.12.2.min.js"></script>
+        <script src="/lib/bootstrap.min.js"></script>*@
+
+
 
     <style>
         .button {
@@ -152,22 +154,22 @@
 
 
 
-    // When the user scrolls down 20px from the top of the document, show the button
-    window.onscroll = function () { scrollFunction() };
+    //// When the user scrolls down 20px from the top of the document, show the button
+    //window.onscroll = function () { scrollFunction() };
 
-    function scrollFunction() {
-        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-            document.getElementById("myBtn").style.display = "block";
-        } else {
-            document.getElementById("myBtn").style.display = "none";
-        }
-    }
+    //function scrollFunction() {
+    //    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    //        document.getElementById("myBtn").style.display = "block";
+    //    } else {
+    //        document.getElementById("myBtn").style.display = "none";
+    //    }
+    //}
 
-    // When the user clicks on the button, scroll to the top of the document
-    function topFunction() {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-    }
+    //// When the user clicks on the button, scroll to the top of the document
+    //function topFunction() {
+    //    document.body.scrollTop = 0;
+    //    document.documentElement.scrollTop = 0;
+    //}
 
 
     function myFunction() {

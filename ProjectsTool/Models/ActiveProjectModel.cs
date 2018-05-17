@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProjectsTool.Models
 {
-    public class ActiveProjectModel : ProjectToolsEntities
+    public class ActiveProjectModel 
     {
         public int ProjectResource { get; set; }
         public ActiveProject ActiveProject { get; set; }

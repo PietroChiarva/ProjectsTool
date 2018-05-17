@@ -12,7 +12,7 @@ namespace ProjectsTool.Models
         public List<Project> projects { get; set; }
         public int Percentage { get; set; }
         public int IDProject { get; set; }
-        public int? IDPerson { get; set; }
+        public int IDPerson { get; set; }
         //public List<ProjectResource> ProjectResources { get; set; }
 
    

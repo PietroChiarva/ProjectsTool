@@ -58,7 +58,7 @@
                     @Html.DisplayFor(modelItem => item.Person.Serial)
                 </td>*@
             <td>
-                <a class="btn btn-primary" onclick="ShowAddProjectResourceModal ('@item.Person.IDPerson','@Model.IDProject' )">Add Project</a>
+                <a class="btn btn-primary" onclick="ShowAddProjectResourceModal ('@Model.IDPerson','@item.IDProject' )">Add Project</a>
             </td>
             @*'@Model.IDProject'*@
         </tr>
@@ -70,8 +70,9 @@
 <script type="text/javascript">
 
     function ShowAddProjectResourceModal(IDPerson, IDProject) {
-
+        debugger;
         $('#showModal2 .modal-body').load(Router.action('Resources', 'AddProjectResource', { IDPerson: IDPerson, IDProject: IDProject }));
+        $('#showModalInside').width(800);
         $('#showModal2').modal("show");
 
 
