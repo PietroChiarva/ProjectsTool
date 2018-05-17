@@ -93,23 +93,58 @@
 
 
 
-        <div class="form-group">
+        @*<div class="form-group">
             @Html.LabelFor(model => model.IDClient, "IDClient", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.IDClient, new SelectList(ViewBag.RoleList, "Value", "Text"), "Select a...", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.IDClient, "", new { @class = "text-danger" })
             </div>
-        </div>
+        </div>*@
 
 
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <a class="btn btn-default" onclick="ModifyProject('@Model.IDProject')">Modify</a>
             </div>
         </div>
     </div>
 }   
+
+<script>
+    function ModifyProject(IDProject) {
+        var data = {
+            IDProject: IDProject,
+            ProjectName: $('#ProjectName').val(),
+            StartDate: $('#StartDate').val(),
+            EndDate: $('#EndDate').val(),
+        };
+        $.ajax({
+            //imposto il tipo di invio dati (GET O POST)
+            type: "POST",
+            //Dove devo inviare i dati recuperati dal form?
+            url: "@Url.Action("DoModifyProject", "Home")",
+            //Quali dati devo inviare? e che tipo
+            data: data,
+            success: function (data) {
+                if (data.flag == true) {
+                    alert(data.messaggio);
+                    window.location.href = '@Url.Action("Index")';
+                }
+                else {
+                    alert(data.messaggio);
+                }
+
+
+            },
+            error: function () {
+                alert("Inserire tutti i dati");
+                //sempre meglio impostare una callback in caso di fallimento
+            }
+
+        });
+    }
+</script>
 
 
 

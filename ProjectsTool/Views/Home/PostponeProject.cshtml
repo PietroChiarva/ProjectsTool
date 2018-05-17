@@ -1,0 +1,65 @@
+﻿@model ProjectsTool.Project
+
+
+    
+<div class="form-horizontal">
+    <h4>Insert a new End Date</h4>
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.IDProject)
+
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { type = "date", @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <a class="btn btn-default" onclick="doPostponeProject('@Model.IDProject')">Save</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function doPostponeProject(IDProject) {
+        var data = {
+            IDProject: IDProject,
+            EndDate: $("#EndDate").val()
+        };
+
+        $.ajax({
+            //imposto il tipo di invio dati (GET O POST)
+            type: "POST",
+            //Dove devo inviare i dati recuperati dal form?
+            url: "@Url.Action("DoPostponeProject", "Home")",
+            //Quali dati devo inviare? e che tipo
+            data: data,
+            success: function (data) {
+                if (data.flag == true) {
+                    alert(data.messaggio);
+                    $("#showModal2").modal('hide');
+                    $("#showModal").modal('hide');
+                }
+                else {
+                    alert(data.messaggio);
+                }
+
+
+            },
+            error: function () {
+                alert("Inserire la data");
+                //sempre meglio impostare una callback in caso di fallimento
+            }
+
+        });
+    }
+</script>
+
+
+
