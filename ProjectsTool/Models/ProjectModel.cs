@@ -13,6 +13,7 @@ namespace ProjectsTool.Models
        public List<Project> projects { get; set; }
        public List<Client> Clients { get; set; }
        public int IDManager { get; set; }
+       public string ManagerName { get; set; }
 
     }
 }

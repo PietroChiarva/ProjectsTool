@@ -77,10 +77,8 @@
             </select>
         </div>
         <div class="col-md-4">
-
-
-            <input type="checkbox" id="ManagerCheck" onclick="OnlyManagerProjects()" />
-            <p>See only your Resources</p>
+            <input type="checkbox" id="ManagerCheck" onclick="OnlyManagerProjects('@Model.ManagerName')" />
+             <p>See only your Projects</p>
         </div>
 
     </div>
@@ -213,7 +211,7 @@
                    
                 },
                 error: function () {
-                    
+
                 }
 
             });
@@ -222,9 +220,28 @@
        
     }
 
-    function OnlyManagerProjects() {
-        var flag;
-        var bool;
+    function OnlyManagerProjects(ManagerName) {
+        
+        var OnlyManager = $('#ManagerCheck').prop('checked');
+        if (OnlyManager == true) {
+            var filter, table, tr, td, i;
+            filter = ManagerName;
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[5];
+                if (td) {
+                    if (td.innerText == filter) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+        else {
+            window.location.href = "@Url.Action("Index","Home")";
+        }
 
     }
 
@@ -304,11 +321,11 @@
             flag = false;
         }
     }*@
-    $('tr.header').click(function () {
-        $(this).nextUntil('tr.header').css('display', function (i, v) {
-            return this.style.display === 'table-row' ? 'none' : 'table-row';
-        });
-    });
+    //$('tr.header').click(function () {
+    //    $(this).nextUntil('tr.header').css('display', function (i, v) {
+    //        return this.style.display === 'table-row' ? 'none' : 'table-row';
+    //    });
+    //});
 
     //function ShowProjectModal(IDPerson) {
 

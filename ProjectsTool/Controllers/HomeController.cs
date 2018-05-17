@@ -52,24 +52,52 @@ namespace ProjectsTool.Controllers
 
                 project.IsFinish = true;
                 project.EndDate = DateTime.Now;
-                foreach (ActiveProject a in activeProjects)
+                if (activeProjects != null)
                 {
-                    a.EndActiveDate = DateTime.Now;
+                    foreach (ActiveProject a in activeProjects)
+                    {
+                        a.EndActiveDate = DateTime.Now;
 
+                    }
                 }
             }
             return Json(new { messaggio = "The project is concluded" });
         }
 
-        //public ActionResult PostponeProject(int IDProject)
-        //{
+        public ActionResult PostponeProject(int IDProject)
+        {
+            Project project = null;
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
+            }
+            return PartialView(project);
+        }
 
-        //}
+        public ActionResult DoPostponeProject(int IDProject, DateTime EndDate)
+        {
+            Project project = null;
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
+                if (EndDate != null && EndDate > DateTime.Now)
+                {
+                    project.EndDate = EndDate;
+                    db.SaveChanges();
+                    return Json(new { flag = true, messaggio = "End Date modified with success" });
+                }
+                else
+                {
+                    return Json(new { flag = false, messaggio = "The End Date is null or is too low" });
+                }
+            }
+        }
 
         public ActionResult Index(bool? onlyManager)
         {
             //int IDPerson = 0;
             //int IDRole = 1;
+            Session["OnlyManager"] = onlyManager;
             string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
             int IDManager = 0;
             ProjectModel projectModel = new ProjectModel();
@@ -81,13 +109,15 @@ namespace ProjectsTool.Controllers
             List<Project> projects = new List<Project>();
             List<SingleProjectModel> Proj = new List<SingleProjectModel>();
             List<ProjectResource> projectResources = new List<ProjectResource>();
+            Person d = null; ;
 
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                var d = db.Person.Where(l => l.EMail == EMail).FirstOrDefault();
+                d = db.Person.Where(l => l.EMail == EMail).FirstOrDefault();
                 if (d != null)
                 {
                     IDManager = d.IDPerson;
+
 
                 }
 
@@ -154,6 +184,7 @@ namespace ProjectsTool.Controllers
 
             projectModel.Projects = Proj;
             projectModel.IDManager = IDManager;
+            projectModel.ManagerName = d.Name;
             //projectModel.ProjectResources = resources;
                 return View(projectModel);
         }
@@ -368,7 +399,7 @@ namespace ProjectsTool.Controllers
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
                 project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
-                ViewBag.RoleList = db.Client.Select(r => new SelectListItem() { Value = r.IDClient.ToString(), Text = r.Name }).ToList();
+                //ViewBag.RoleList = db.Client.Select(r => new SelectListItem() { Value = r.IDClient.ToString(), Text = r.Name }).ToList();
 
 
 
@@ -376,19 +407,26 @@ namespace ProjectsTool.Controllers
             return PartialView(project);
         }
         
-        public ActionResult DoModifyProject(Project data)
+        public ActionResult DoModifyProject(int IDProject, string ProjectName, DateTime StartDate, DateTime EndDate)
         {
             Project project = null;
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                project = db.Project.Where(l => l.IDProject == data.IDProject).FirstOrDefault();
-                project.ProjectName = data.ProjectName;
-                project.StartDate = data.StartDate;
-                project.EndDate = data.EndDate;
-                project.Client = data.Client;
-                db.SaveChanges();
+                project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
+                if(ProjectName != null && StartDate != null && EndDate != null && EndDate > DateTime.Now && EndDate > StartDate)
+                { 
+                    project.ProjectName = ProjectName;
+                    project.StartDate = StartDate;
+                    project.EndDate = EndDate;
+                    db.SaveChanges();
+                    return Json(new { flag = true, messaggio = "Project modified with success" });
+                }
+                else
+                {
+                    return Json(new { flag = false, messaggio = "The entered data are not correct" });
+                }
             }
-            return RedirectToAction("Index");
+
         }
 
         public ActionResult DeleteModal(int IDProject)
