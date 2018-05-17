@@ -95,9 +95,9 @@ namespace ProjectsTool.Controllers
             List<Project> projects = new List<Project>();
             List<ActiveProject> ProgettiActivi = new List<ActiveProject>();
 
-        
 
-            bool flag = false;
+
+            
 
             string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
             using (ProjectToolsEntities db = new ProjectToolsEntities())
@@ -105,51 +105,58 @@ namespace ProjectsTool.Controllers
 
                 var d = db.Person.Where(l => l.EMail == EMail).FirstOrDefault();
                 activeProjects = db.ActiveProject.ToList();
+                var proj = db.Project.Where(l => l.IDPerson == d.IDPerson).ToList();
+                projects = db.Project.ToList();
 
-            
+                bool flag = false;
 
-                
-
-                    foreach (ActiveProject a in activeProjects)
+                foreach (Project p in projects)
+                {
+                    if (p.IDPerson == d.IDPerson)
                     {
-                        flag = false;
-                        if (IDPerson == a.IDPerson)
+                        foreach (ActiveProject a in activeProjects)
                         {
-                           
-                                projectResource.Percentage += a.Percentage;
-                            if (projectResource.Percentage < 100)
+                            flag = false;
+
+                            if (IDPerson == a.IDPerson)
                             {
-
-
-                                if (flag == false)
+                                projectResource.Percentage += a.Percentage;
+                                if (projectResource.Percentage < 100)
                                 {
+                                    if (p.IDProject == a.IDProject)
+                                    
+                                    {
+                                        Project pro = db.Project.Where(l => l.IDProject == a.IDProject).FirstOrDefault();
+                                       proj.Remove(pro);
 
 
-                                ProjectResource.projects = db.Project.Where(m => m.IDPerson == d.IDPerson).ToList();
+                                       
+                                        
 
-                                ProjectResource.IDPerson = IDPerson;
+                                    }
 
+                                }
+                                else
+                                {
+                                    return RedirectToAction("NonAssegnabile");
+                                }
+                                
                             }
-                           
 
+                           
+                            
                         }
+                        ProjectResource.projects = proj;
+                        ProjectResource.IDPerson = IDPerson;
                         return PartialView(ProjectResource);
                     }
-                                                       
-                        else
-                        {
-                            //TempData["msg"] = "<script>alert('Impossibile to add project at this resource because has got more 100% of percentage');</script>";
-                            return RedirectToAction("NonAssegnabile");
+                    
 
-                        }
+                }
 
-
-                    }     
+                return PartialView();
 
             }
-
-            return PartialView();
-
         }
 
         public ActionResult NonAssegnabile()

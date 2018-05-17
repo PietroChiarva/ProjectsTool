@@ -59,7 +59,16 @@
     <h2>Client Section</h2>
     <div class="row">
         <div class="col-sm-8">
-            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for Firstname of resource" title="Type in a name">
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for..." title="Type in a name">
+
+            <select id="filterSearch" class="custom-select">
+                <option value="">Search Filters</option>
+                <option value="Name">Name</option>
+                <option value="Society">Society</option>
+                <option value="NumberPhone">NumberPhone</option>
+                <option value="Email">Email</option>
+                <option value="PartitaIva">PartitaIva</option>
+            </select>
         </div>
 
         <div class="col-sm-4">
@@ -178,13 +187,31 @@
 
 
     function myFunction() {
+        var filterOption = $('#filterSearch').val();
         var input, filter, table, tr, td, i;
         input = document.getElementById("myInput");
         filter = input.value.toUpperCase();
         table = document.getElementById("myTable");
         tr = table.getElementsByTagName("tr");
         for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
+            if (filterOption == "") {
+                td = tr[i].getElementsByTagName("td")[0];
+            }
+            else if (filterOption == "Name") {
+                td = tr[i].getElementsByTagName("td")[1];
+            }
+            else if (filterOption == "Society") {
+                td = tr[i].getElementsByTagName("td")[2];
+            }
+            else if (filterOption == "NumberPhone") {
+                td = tr[i].getElementsByTagName("td")[3];
+            }
+            else if (filterOption == "Email") {
+                td = tr[i].getElementsByTagName("td")[4];
+            }
+            else if (filterOption == "PartitaIva") {
+                td = tr[i].getElementsByTagName("td")[5];
+            }
             if (td) {
                 if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
                     tr[i].style.display = "";
