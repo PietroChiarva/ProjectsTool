@@ -53,65 +53,66 @@
 
 <body>
     <h2>Resources</h2>
-
-    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for..." title="Type in a name">
-
-    <select id="filterSearch" class="custom-select">
-        <option value="">Search Filters</option>
-        <option value="Serial">Serial</option>
-        <option value="Name">Name</option>
-        <option value="Surname">Surname</option>
-        <option value="EMail">EMail</option>
-    </select>
+    <div class="row">
+        <div class="col-md-4">
+            <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for..." title="Type in a name">
 
 
-    <table class="table" id="myTable">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Serial)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Surname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EMail)
-            </th>
-            @*<th>
-                    @Html.DisplayNameFor(model => model.Role.Role1)
-                </th>
-                <th></th>*@
-        </tr>
+            <select id="filterSearch" class="custom-select">
+                <option value="">Search Filters(default Name)</option>
+                <option value="Serial">Serial</option>
+                <option value="Surname">Surname</option>
+            </select>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Serial)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Surname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EMail)
-                </td>
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.Role.Role1)
-                    </td>*@
-                <td>
-                    <a class="btn btn-primary" onclick="ShowProjectModal ('@item.IDPerson')">View Project</a>
-                    <a class="btn btn-primary" onclick="ShowProjectStoryModal ('@item.IDPerson')">Project Story</a>
-                    <a class="btn btn-primary" onclick="ShowAssegnaProjectModal ('@item.IDPerson')">Add Project</a>
-                </td>
-            </tr>
-        }
+            </div>
+        </div>
+            <table class="table" id="myTable">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Serial)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Surname)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EMail)
+                    </th>
+                    @*<th>
+                            @Html.DisplayNameFor(model => model.Role.Role1)
+                        </th>
+                        <th></th>*@
+                </tr>
 
-    </table>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Serial)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Surname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EMail)
+                        </td>
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.Role.Role1)
+                            </td>*@
+                        <td>
+                            <a class="btn btn-primary" onclick="ShowProjectModal ('@item.IDPerson')">View Project</a>
+                            <a class="btn btn-primary" onclick="ShowProjectStoryModal ('@item.IDPerson')">Project Story</a>
+                            <a class="btn btn-primary" onclick="ShowAssegnaProjectModal ('@item.IDPerson')">Add Project</a>
+                        </td>
+                    </tr>
+                }
+
+            </table>
 </body>
 
 <script type="text/javascript">
@@ -185,20 +186,15 @@
         tr = table.getElementsByTagName("tr");
         for (i = 0; i < tr.length; i++) {
             if (filterOption == "") {
-                td = tr[i].getElementsByTagName("td")[0];
-            }
-            else if (filterOption == "Serial") {
                 td = tr[i].getElementsByTagName("td")[1];
             }
-            else if (filterOption == "Name") {
-                td = tr[i].getElementsByTagName("td")[2];
+            else if (filterOption == "Serial") {
+                td = tr[i].getElementsByTagName("td")[0];
             }
             else if (filterOption == "Surname") {
-                td = tr[i].getElementsByTagName("td")[3];
+                td = tr[i].getElementsByTagName("td")[2];
             }
-            else if (filterOption == "Email") {
-                td = tr[i].getElementsByTagName("td")[4];
-            }
+
             if (td) {
                 if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
                     tr[i].style.display = "";

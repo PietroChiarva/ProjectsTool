@@ -14,11 +14,11 @@ namespace ProjectsTool.Controllers
         public ActionResult CheckDateProjects(int IDManager)
         {
             Project projects = null;
-
+            var yesterday = DateTime.Now.AddDays(-1);
 
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                projects = db.Project.Where(l => l.IDPerson == IDManager && DateTime.Now >= l.EndDate).FirstOrDefault();
+                projects = db.Project.Where(l => l.IDPerson == IDManager && l.EndDate <= yesterday && l.IsFinish == false).FirstOrDefault();
             }
                 if(projects != null)
                 {
@@ -33,9 +33,10 @@ namespace ProjectsTool.Controllers
         public ActionResult DateProjectsModal(int IDManager)
         {
             Project project = null;
+            var yesterday = DateTime.Now.AddDays(-1);
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                project = db.Project.Where(l => l.IDPerson == IDManager && DateTime.Now >= l.EndDate).FirstOrDefault();
+                project = db.Project.Where(l => l.IDPerson == IDManager && l.EndDate <= yesterday).FirstOrDefault();
             }
 
             return PartialView(project);
@@ -60,6 +61,7 @@ namespace ProjectsTool.Controllers
 
                     }
                 }
+                db.SaveChanges();
             }
             return Json(new { messaggio = "The project is concluded" });
         }

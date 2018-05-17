@@ -35,7 +35,8 @@
                  data: data,
              success: function (data) {
                  alert(data.messaggio);
-                 $('#showModal').hide();;
+                 $('#showModal').hide();
+                 window.location.href = '@Url.Action("Index","Home")';
                    
                 },
                 error: function () {
