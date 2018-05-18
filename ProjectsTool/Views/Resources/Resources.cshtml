@@ -185,19 +185,19 @@
         tr = table.getElementsByTagName("tr");
         for (i = 0; i < tr.length; i++) {
             if (filterOption == "") {
-                td = tr[i].getElementsByTagName("td")[0];
-            }
-            else if (filterOption == "Serial") {
                 td = tr[i].getElementsByTagName("td")[1];
             }
+            else if (filterOption == "Serial") {
+                td = tr[i].getElementsByTagName("td")[0];
+            }
             else if (filterOption == "Name") {
-                td = tr[i].getElementsByTagName("td")[2];
+                td = tr[i].getElementsByTagName("td")[1];
             }
             else if (filterOption == "Surname") {
-                td = tr[i].getElementsByTagName("td")[3];
+                td = tr[i].getElementsByTagName("td")[2];
             }
             else if (filterOption == "Email") {
-                td = tr[i].getElementsByTagName("td")[4];
+                td = tr[i].getElementsByTagName("td")[3];
             }
             if (td) {
                 if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
