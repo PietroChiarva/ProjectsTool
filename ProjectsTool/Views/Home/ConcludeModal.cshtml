@@ -1,22 +1,53 @@
 ﻿@model ProjectsTool.Project
 
-@if (ViewBag.MyErrorMessage != null)
-{
-    <script> alert(@ViewBag.MyErrorMessage);</script>
-}
+
     <h3>Are you sure you want to conclude this project?</h3>
     <div>
 
 
 
-        @using (Html.BeginForm("DoConcludeProject", "Home", null, FormMethod.Post))
-        {
+
 
             @Html.HiddenFor(model => model.IDProject)
 
             <div class="form-actions no-color">
-                <input type="submit" value="Conclude" class="btn btn-default" />
+                <a class="btn btn-default" onclick="ConcludeProject ('@Model.IDProject')">Conclude</a>
 
             </div>
-        }
+        
     </div>
+<script>
+    function ConcludeProject(IDProject) {
+        var data = {
+            IDProject: IDProject
+        };
+                 $.ajax({
+                //imposto il tipo di invio dati (GET O POST)
+                type: "GET",
+                //Dove devo inviare i dati recuperati dal form?
+                url: "@Url.Action("DoConcludeProject", "Home")",
+             //Quali dati devo inviare? e che tipo
+                 data: data,
+                success: function (data) {
+                
+                    if (data.flag == true) {
+                        alert(data.messaggio);
+                        $("#showModal").modal('hide');
+                        window.location.href = '@Url.Action("Index","Home")';
+
+                    }
+                    else {
+                        alert(data.messaggio);
+                        $("#showModal").modal('hide');
+                    }
+
+                   
+                },
+                error: function () {
+
+                }
+
+            });
+
+    }
+</script>

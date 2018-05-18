@@ -14,11 +14,11 @@ namespace ProjectsTool.Controllers
         public ActionResult CheckDateProjects(int IDManager)
         {
             Project projects = null;
-
+            var yesterday = DateTime.Now.AddDays(-1);
 
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                projects = db.Project.Where(l => l.IDPerson == IDManager && DateTime.Now >= l.EndDate).FirstOrDefault();
+                projects = db.Project.Where(l => l.IDPerson == IDManager && l.EndDate <= yesterday && l.IsFinish == false).FirstOrDefault();
             }
                 if(projects != null)
                 {
@@ -33,9 +33,10 @@ namespace ProjectsTool.Controllers
         public ActionResult DateProjectsModal(int IDManager)
         {
             Project project = null;
+            var yesterday = DateTime.Now.AddDays(-1);
             using (ProjectToolsEntities db = new ProjectToolsEntities())
             {
-                project = db.Project.Where(l => l.IDPerson == IDManager && DateTime.Now >= l.EndDate).FirstOrDefault();
+                project = db.Project.Where(l => l.IDPerson == IDManager && l.EndDate <= yesterday).FirstOrDefault();
             }
 
             return PartialView(project);
@@ -60,6 +61,7 @@ namespace ProjectsTool.Controllers
 
                     }
                 }
+                db.SaveChanges();
             }
             return Json(new { messaggio = "The project is concluded" });
         }
@@ -93,11 +95,9 @@ namespace ProjectsTool.Controllers
             }
         }
 
-        public ActionResult Index(bool? onlyManager)
+        public ActionResult Index()
         {
-            //int IDPerson = 0;
-            //int IDRole = 1;
-            Session["OnlyManager"] = onlyManager;
+
             string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
             int IDManager = 0;
             ProjectModel projectModel = new ProjectModel();
@@ -345,51 +345,61 @@ namespace ProjectsTool.Controllers
             bool flag = false;
             int percentage = 0;
             //ActiveResourceModel model = new ActiveResourceModel();
-           
 
-            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            if (data.ActiveProject.EndActiveDate < data.ActiveProject.StartActiveDate
+                || data.ActiveProject.EndActiveDate < DateTime.Now)
             {
-                activeProject = db.ActiveProject.ToList();
-                foreach(ActiveProject a in activeProject)
-                {
-                    if(data.ProjectResource == a.IDPerson)
-                    {
-                        percentage += a.Percentage;
-                        
-                    }
-                    else if(data.ProjectResource != a.IDPerson && flag == false)
-                    {
-                        percentage += data.ActiveProject.Percentage;
-                        flag = true;
-                    }
-
-                }
-                if(percentage <= 100 &&  percentage > 0)
-                {
-                    projectToAdd.IDPerson = data.ProjectResource;
-                    projectToAdd.IDProject = data.IDProject;
-                    projectToAdd.Percentage = data.ActiveProject.Percentage;
-                    projectToAdd.StartActiveDate = data.ActiveProject.StartActiveDate;
-                    projectToAdd.EndActiveDate = data.ActiveProject.EndActiveDate;
-                    db.ActiveProject.Add(projectToAdd);
-                    db.SaveChanges();
-                }
-                else
-                {
-                    return Json(new { messaggio = $"The percentage is bigger than 100% or is less than 0%, insert another percentage!"
-                        , flag = true ,
-                        JsonRequestBehavior.AllowGet
-                    });
-                }
+                return Json(new { messaggio = "The End Date is not valid!", flag = true }, JsonRequestBehavior.AllowGet);
             }
-
-            return Json(new
+            else
             {
-                messaggio = $"The resource is now active in this project with a {projectToAdd.Percentage}%"
-                        ,
-                flag = false,
-                JsonRequestBehavior.AllowGet
-            });
+                using (ProjectToolsEntities db = new ProjectToolsEntities())
+                {
+                    activeProject = db.ActiveProject.ToList();
+                    foreach (ActiveProject a in activeProject)
+                    {
+                        if (data.ProjectResource == a.IDPerson)
+                        {
+                            percentage += a.Percentage;
+
+                        }
+                        else if (data.ProjectResource != a.IDPerson && flag == false)
+                        {
+                            percentage += data.ActiveProject.Percentage;
+                            flag = true;
+                        }
+
+                    }
+                    if (percentage <= 100 && percentage > 0)
+                    {
+                        projectToAdd.IDPerson = data.ProjectResource;
+                        projectToAdd.IDProject = data.IDProject;
+                        projectToAdd.Percentage = data.ActiveProject.Percentage;
+                        projectToAdd.StartActiveDate = data.ActiveProject.StartActiveDate;
+                        projectToAdd.EndActiveDate = data.ActiveProject.EndActiveDate;
+                        db.ActiveProject.Add(projectToAdd);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        return Json(new
+                        {
+                            messaggio = $"The percentage is bigger than 100% or is less than 0%, insert another percentage!"
+                            ,
+                            flag = true,
+                            JsonRequestBehavior.AllowGet
+                        });
+                    }
+                }
+
+                return Json(new
+                {
+                    messaggio = $"The resource is now active in this project with a {projectToAdd.Percentage}%"
+                            ,
+                    flag = false,
+                    JsonRequestBehavior.AllowGet
+                });
+            }
         }
 
         public ActionResult ModifyForm(int IDProject)
@@ -419,11 +429,11 @@ namespace ProjectsTool.Controllers
                     project.StartDate = StartDate;
                     project.EndDate = EndDate;
                     db.SaveChanges();
-                    return Json(new { flag = true, messaggio = "Project modified with success" });
+                    return Json(new { flag = true, messaggio = "Project modified with success" }, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    return Json(new { flag = false, messaggio = "The entered data are not correct" });
+                    return Json(new { flag = false, messaggio = "The entered data are not correct" }, JsonRequestBehavior.AllowGet);
                 }
             }
 
@@ -459,6 +469,22 @@ namespace ProjectsTool.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult CheckResourceForConclude(int IDProject)
+        {
+            ActiveProject activeProject = null;
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                activeProject = db.ActiveProject.Where(l => l.IDProject == IDProject).FirstOrDefault();
+            }
+            if(activeProject != null)
+            {
+                return Json(new { flag = true, messaggio = "There are some active resource on this project!" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { flag = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
         public ActionResult ConcludeModal(int IDProject)
         {
             Project project = null;
@@ -479,8 +505,8 @@ namespace ProjectsTool.Controllers
             {
                 project = db.Project.Where(l => l.IDProject == IDProject).FirstOrDefault();
                 activeProjects = db.ActiveProject.Where(l => l.IDProject == IDProject).ToList();
-                if(activeProjects.Count != 0)
-                {
+                //if(activeProjects.Count != 0)
+                //{
                     project.IsFinish = true;
                     project.EndDate = DateTime.Now;
                     foreach(ActiveProject a in activeProjects)
@@ -488,15 +514,16 @@ namespace ProjectsTool.Controllers
                         a.EndActiveDate = DateTime.Now;
                        
                     }
-                }
-                else
-                {
-                    ViewBag.MyErrorMessage = "You can't conclude the project because is not active!";
-                    return PartialView();
-                }
+                    db.SaveChanges();
+                    return Json(new { flag = true, messaggio = "Project concluded with success" }, JsonRequestBehavior.AllowGet);
+                //}
+                //else
+                //{
+                //    return Json(new { flag = false, messaggio = "You can't conclude this project because is not active" },JsonRequestBehavior.AllowGet);
+                //}
             }
 
-                return RedirectToAction("Index");
+
         }
 
         public ActionResult AddProject()
@@ -533,11 +560,11 @@ namespace ProjectsTool.Controllers
                 
             
         }
-            return Json(new { messaggio = $"Project{data.IDProject} add with success", flag = true });
+            return Json(new { messaggio = $"Project{data.IDProject} add with success", flag = true }, JsonRequestBehavior.AllowGet);
 
         }else
             {
-                return Json(new { messaggio = $"Dati mancanti o non validi", flag = false });
+                return Json(new { messaggio = $"Dati mancanti o non validi", flag = false }, JsonRequestBehavior.AllowGet);
             }
         }
         
