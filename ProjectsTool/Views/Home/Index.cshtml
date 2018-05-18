@@ -118,42 +118,50 @@
                         </tr>
                     }
 
-                    <tr>
+                        <tr>
 
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ProjectName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.StartDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EndDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.IsFinish)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ClientName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ManagerName)
-                        </td>
-                        @{
-                            @helper Disabled(bool disable)
-                                {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProjectName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StartDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EndDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsFinish)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ClientName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ManagerName)
+                            </td>
+                            @{
+                                @helper Disabled(bool disable)
+                                 {
                                     if (!disable)
                                     {
-                                        @:disabled
+                                       @:disabled
                                     }
-}
-                        }
-                        <td>
-                            <a class="btn btn-primary @Disabled(item.IsYourManager)" onclick="ShowResourceModal ('@item.IDProject')">Add resources</a>
-                            <a class="btn btn-primary @Disabled(item.IsYourManager)" onclick="ShowModifyModal ('@item.IDProject')">Modify</a>
-                            <a class="btn btn-primary @Disabled(item.IsYourManager)" onclick="ShowConcludeModal ('@item.IDProject')">Conclude</a>
-                            <a class="btn btn-primary @Disabled(item.IsYourManager)" onclick="ShowDeleteModal ('@item.IDProject')">Delete</a>
-                        </td>
-                    </tr>
+
+                                 }
+                                @helper IsFinish(bool isFinish)
+                                {
+                                    if (isFinish)
+                                    {
+                                       @:disabled
+                                    }
+                                }
+                            }
+                            <td>
+                                <a class="btn btn-primary @Disabled(item.IsYourManager) @IsFinish(item.IsFinish)" onclick="ShowResourceModal ('@item.IDProject')">Add resources</a>
+                                <a class="btn btn-primary @Disabled(item.IsYourManager) @IsFinish(item.IsFinish)" onclick="ShowModifyModal ('@item.IDProject')">Modify</a>
+                                <a class="btn btn-primary @Disabled(item.IsYourManager) @IsFinish(item.IsFinish)" onclick="ShowConcludeModal ('@item.IDProject')">Conclude</a>
+                                <a class="btn btn-primary @Disabled(item.IsYourManager)" onclick="ShowDeleteModal ('@item.IDProject')">Delete</a>
+                            </td>
+                        </tr>
                 }
 
             </table>
@@ -270,9 +278,33 @@
 
     }
     function ShowConcludeModal(IDProject){
+        var data = {
+            IDProject: IDProject
+        };
+        $.ajax({
+                type: "GET",
+                //Dove devo inviare i dati recuperati dal form?
+                url: "@Url.Action("CheckResourceForConclude", "Home")",
+                //Quali dati devo inviare? e che tipo
+                data: data,
+                success: function (data) {
+                    if (data.flag == true) {
+                        alert(data.messaggio);
+                        $('#showModal .modal-body').load(Router.action('Home', 'ConcludeModal', { IDProject: IDProject }));
+                        $('#showModal').modal("show");
+                    }
+                    else {
+                        $('#showModal .modal-body').load(Router.action('Home', 'ConcludeModal', { IDProject: IDProject }));
+                        $('#showModal').modal("show");
+                    }
 
-        $('#showModal .modal-body').load(Router.action('Home', 'ConcludeModal', { IDProject: IDProject }));
-        $('#showModal').modal("show");
+                },
+                error: function () {
+                    alert("Chiamata fallita, riprova");
+                    //sempre meglio impostare una callback in caso di fallimento
+                }
+            });
+        
 
 
     }
@@ -322,35 +354,7 @@
             flag = false;
         }
     }*@
-    //$('tr.header').click(function () {
-    //    $(this).nextUntil('tr.header').css('display', function (i, v) {
-    //        return this.style.display === 'table-row' ? 'none' : 'table-row';
-    //    });
-    //});
-
-    //function ShowProjectModal(IDPerson) {
-
-    //    //window.open(Router.action('Resources', 'Details', { IDPerson: IDPerson }));
-    //    //$('#showModal .modal-body').load(Router.action('Employee', 'Index', { UserID: UserID }));
-    //    //$('#showModal').modal("show");
-
-
-    //}
-
-
-    //function ShowViewModal(UserID) {
-
-    //    $('#showModal .modal-body').load(Router.action('Manager', 'ViewTask', { UserID: UserID }));
-    //    $('#showModal').modal("show");
-
-    //}
-
-    //function ShowAssegnaModal(UserID) {
-
-    //    $('#showModal .modal-body').load(Router.action('Manager', 'AssegnaTask', { UserID: UserID }));
-    //    $('#showModal').modal("show");
-
-    //}
+  
 
 
 

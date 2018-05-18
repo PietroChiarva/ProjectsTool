@@ -95,11 +95,9 @@ namespace ProjectsTool.Controllers
             }
         }
 
-        public ActionResult Index(bool? onlyManager)
+        public ActionResult Index()
         {
-            //int IDPerson = 0;
-            //int IDRole = 1;
-            Session["OnlyManager"] = onlyManager;
+
             string EMail = ((System.Security.Claims.ClaimsIdentity)HttpContext.GetOwinContext().Authentication.User.Identity).Name;
             int IDManager = 0;
             ProjectModel projectModel = new ProjectModel();
@@ -347,51 +345,61 @@ namespace ProjectsTool.Controllers
             bool flag = false;
             int percentage = 0;
             //ActiveResourceModel model = new ActiveResourceModel();
-           
 
-            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            if (data.ActiveProject.EndActiveDate < data.ActiveProject.StartActiveDate
+                || data.ActiveProject.EndActiveDate < DateTime.Now)
             {
-                activeProject = db.ActiveProject.ToList();
-                foreach(ActiveProject a in activeProject)
-                {
-                    if(data.ProjectResource == a.IDPerson)
-                    {
-                        percentage += a.Percentage;
-                        
-                    }
-                    else if(data.ProjectResource != a.IDPerson && flag == false)
-                    {
-                        percentage += data.ActiveProject.Percentage;
-                        flag = true;
-                    }
-
-                }
-                if(percentage <= 100 &&  percentage > 0)
-                {
-                    projectToAdd.IDPerson = data.ProjectResource;
-                    projectToAdd.IDProject = data.IDProject;
-                    projectToAdd.Percentage = data.ActiveProject.Percentage;
-                    projectToAdd.StartActiveDate = data.ActiveProject.StartActiveDate;
-                    projectToAdd.EndActiveDate = data.ActiveProject.EndActiveDate;
-                    db.ActiveProject.Add(projectToAdd);
-                    db.SaveChanges();
-                }
-                else
-                {
-                    return Json(new { messaggio = $"The percentage is bigger than 100% or is less than 0%, insert another percentage!"
-                        , flag = true ,
-                        JsonRequestBehavior.AllowGet
-                    });
-                }
+                return Json(new { messaggio = "The End Date is not valid!", flag = true }, JsonRequestBehavior.AllowGet);
             }
-
-            return Json(new
+            else
             {
-                messaggio = $"The resource is now active in this project with a {projectToAdd.Percentage}%"
-                        ,
-                flag = false,
-                JsonRequestBehavior.AllowGet
-            });
+                using (ProjectToolsEntities db = new ProjectToolsEntities())
+                {
+                    activeProject = db.ActiveProject.ToList();
+                    foreach (ActiveProject a in activeProject)
+                    {
+                        if (data.ProjectResource == a.IDPerson)
+                        {
+                            percentage += a.Percentage;
+
+                        }
+                        else if (data.ProjectResource != a.IDPerson && flag == false)
+                        {
+                            percentage += data.ActiveProject.Percentage;
+                            flag = true;
+                        }
+
+                    }
+                    if (percentage <= 100 && percentage > 0)
+                    {
+                        projectToAdd.IDPerson = data.ProjectResource;
+                        projectToAdd.IDProject = data.IDProject;
+                        projectToAdd.Percentage = data.ActiveProject.Percentage;
+                        projectToAdd.StartActiveDate = data.ActiveProject.StartActiveDate;
+                        projectToAdd.EndActiveDate = data.ActiveProject.EndActiveDate;
+                        db.ActiveProject.Add(projectToAdd);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        return Json(new
+                        {
+                            messaggio = $"The percentage is bigger than 100% or is less than 0%, insert another percentage!"
+                            ,
+                            flag = true,
+                            JsonRequestBehavior.AllowGet
+                        });
+                    }
+                }
+
+                return Json(new
+                {
+                    messaggio = $"The resource is now active in this project with a {projectToAdd.Percentage}%"
+                            ,
+                    flag = false,
+                    JsonRequestBehavior.AllowGet
+                });
+            }
         }
 
         public ActionResult ModifyForm(int IDProject)
@@ -461,6 +469,22 @@ namespace ProjectsTool.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult CheckResourceForConclude(int IDProject)
+        {
+            ActiveProject activeProject = null;
+            using (ProjectToolsEntities db = new ProjectToolsEntities())
+            {
+                activeProject = db.ActiveProject.Where(l => l.IDProject == IDProject).FirstOrDefault();
+            }
+            if(activeProject != null)
+            {
+                return Json(new { flag = true, messaggio = "There are some active resource on this project!" }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { flag = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
         public ActionResult ConcludeModal(int IDProject)
         {
             Project project = null;
